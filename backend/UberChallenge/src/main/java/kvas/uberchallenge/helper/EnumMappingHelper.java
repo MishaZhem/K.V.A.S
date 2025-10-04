@@ -22,7 +22,7 @@ public class EnumMappingHelper {
             case "uberpool" -> ProductType.UBER_POOL;
             case "ubergreen" -> ProductType.UBER_GREEN;
             case "uberblack" -> ProductType.UBER_BLACK;
-            case "uber eats" -> ProductType.UBER_EATS;
+            case "uber_eats" -> ProductType.UBER_EATS;
             default -> throw new IllegalArgumentException("Invalid product type: " + name);
         };
     }

@@ -42,6 +42,11 @@ public class Driver {
     @NotNull
     private EarnerType earnerType;
 
+    @Column(name = "experience_months")
+    @Min(value = 0, message = "Experience months must be non-negative")
+    @NotNull
+    private Integer experienceMonths;
+
     @Column(name = "fuel_type")
     @Enumerated(EnumType.ORDINAL)
     @NotNull
@@ -53,7 +58,7 @@ public class Driver {
 
     @Column(name = "vehicle_type")
     @Enumerated(EnumType.ORDINAL)
-    @NotNull
+    @NotNull(message = "Vehicle type must be specified")
     private VehicleType vehicleType;
 
     @CreationTimestamp
