@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { points } from '../assets';
-import { ButtonSleep } from "../components";
+import { ButtonSleep, ButtonMoney } from "../components";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -9,8 +9,8 @@ const MapAnimation = () => {
     const mapContainer = useRef(null);
     const map = useRef<mapboxgl.Map | null>(null);
     const labelRef = useRef(null);
-    const hours = [0, 6, 12, 18, 24];
-    const curHour = 11;
+    const hours = ["00", "06", "12", "18", "24"];
+    const [curHour, setCurHour] = useState(11);
 
     useEffect(() => {
         console.log('Map container:', map.current);
@@ -71,16 +71,6 @@ const MapAnimation = () => {
                     const hour = parseInt((event.target as HTMLInputElement).value);
                     // update the map
                     m.setFilter('collisions', ['==', ['number', ['get', 'Hour']], hour]);
-
-                    // converting 0-23 hour to AMPM format
-                    const ampm = hour >= 12 ? 'PM' : 'AM';
-                    const hour12 = hour % 12 ? hour % 12 : 12;
-
-                    // update text in the UI
-                    const activeHour = document.getElementById('active-hour');
-                    if (activeHour) {
-                        activeHour.innerText = hour12 + ampm;
-                    }
                 });
             }
 
@@ -123,15 +113,33 @@ const MapAnimation = () => {
                     step="1"
                 />
             </div> */}
-            <div className="absolute right-0 left-0 bottom-0 h-[240px] w-full backdrop-blur-md" style={{ maskImage: 'linear-gradient(to top, black, transparent)' }}>
+            <div className="absolute right-0 left-0 bottom-0 h-[300px] w-full backdrop-blur-md" style={{ maskImage: 'linear-gradient(to top, black, transparent)' }}>
                 <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4'>
-                    <div className='graph '>
-                        <div>
-                            <ButtonSleep></ButtonSleep>
+                    <div className='graph z-10 mb-[20px]'>
+                        <div className='flex justify-between w-full mb-[-25px]'>
+                            <div className='flex flex-col gap-2 w-[500px]'>
+                                <ButtonSleep></ButtonSleep>
+                                <div className='bg-white h-[25px]'></div>
+                            </div>
+                            <div className='flex flex-col gap-2 w-[250px]'>
+                                <ButtonMoney></ButtonMoney>
+                                <div className='bg-white h-[25px]'></div>
+                            </div>
 
                         </div>
+                        <div className='w-full sliderTime'></div>
                     </div>
                     <div className="flex justify-between items-center">
+                        <input
+                            id="slider"
+                            className="slider absolute w-full h-[300px] z-[100]"
+                            type="range"
+                            min="0"
+                            max="23"
+                            step="1"
+                            value={curHour}
+                            onChange={(e) => setCurHour(Number(e?.target?.value))}
+                        />
                         {Array(24).fill(1).map((_, index) => (
                             <div className={`flex flex-col items-center w-[18px] ${index % 6 != 0 ? 'mt-[4px] mb-auto' : ''}`}>
                                 <div key={index} className={`column bg-[#D9D9D9] w-[6px] ${index % 6 == 0 ? "h-[20px]" : "h-[12px]"} ${curHour == index ? 'opacity-100 bg-[#FFFFFF]' : "opacity-20"}`}></div>
