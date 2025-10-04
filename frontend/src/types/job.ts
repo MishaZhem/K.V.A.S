@@ -6,6 +6,6 @@ type JobItem = {
     to: Loc,
     city: string,
     potentialEarningCents: number,
-    startTimestamp: Date,
+    startTimestamp: string,
 }
 export { type JobItem };
