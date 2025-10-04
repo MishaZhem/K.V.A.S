@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 1920 1080">
+    <defs>
+        <style>
+            .cls-1 {
+                fill: none;
+            }
+
+            .cls-2 {
+                fill: #d9d9d9;
+            }
+
+            .cls-3 {
+                fill: url(#New_Pattern);
+            }
+        </style>
+        <pattern id="New_Pattern" data-name="New Pattern" x="0" y="0" width="20" height="20"
+            patternUnits="userSpaceOnUse" viewBox="0 0 20 20">
+            <g>
+                <rect class="cls-1" width="20" height="20" />
+                <circle class="cls-2" cx="4.59" cy="4.99" r="2" />
+            </g>
+        </pattern>
+    </defs>
+    <rect class="cls-3" width="1920" height="1080" />
+</svg>
