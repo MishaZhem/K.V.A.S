@@ -1,3 +1,4 @@
-import react from "./react.svg";
+import user from "./svg/user.svg";
+import uber from "./svg/uber.svg";
 
-export { react };
+export { user, uber };

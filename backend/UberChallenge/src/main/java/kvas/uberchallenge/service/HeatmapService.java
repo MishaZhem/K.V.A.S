@@ -3,6 +3,7 @@ package kvas.uberchallenge.service;
 import kvas.uberchallenge.entity.Driver;
 import kvas.uberchallenge.model.HeatmapPointDTO;
 import kvas.uberchallenge.model.HeatmapResponseDTO;
+import kvas.uberchallenge.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -15,22 +16,26 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class HeatmapService {
-    private final DriverInfoService driverInfoService;
+    private final DriverRepository driverRepository;
     private final RestTemplateBuilder restTemplateBuilder;
+
 
     @Value("${ml.service.url:http://localhost:5000}")
     private String mlServiceUrl;
 
-    public HeatmapResponseDTO getHeatmap(UUID driverId, String time) {
+    public HeatmapResponseDTO getHeatmap(String username, String time) {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        Driver driver = driverInfoService.getDriverById(driverId);
-
+        Optional<Driver> driver = driverRepository.getDriverByUser_Username(username);
+        if (driver.isEmpty()) {
+            return new HeatmapResponseDTO();
+        }
+        Driver d = driver.get();
         Map<String, Object> mlRequest = new HashMap<>();
-        mlRequest.put("driverId", driverId.toString());
-        mlRequest.put("rating", driver.getRating());
-        mlRequest.put("earnerType", driver.getEarnerType());
-        mlRequest.put("fuelType", driver.getFuelType());
-        mlRequest.put("vehicleType", driver.getVehicleType());
+        mlRequest.put("driverId", d.getId().toString());
+        mlRequest.put("rating", d.getRating());
+        mlRequest.put("earnerType", d.getEarnerType());
+        mlRequest.put("fuelType", d.getFuelType());
+        mlRequest.put("vehicleType", d.getVehicleType());
         mlRequest.put("time", time);
 
         try {
@@ -58,7 +63,7 @@ public class HeatmapService {
                     40.7 + Math.random() * 0.1,
                     -74.0 + Math.random() * 0.1,
                     Math.random() * 100
-            ));
+            )); 
         }
         return new HeatmapResponseDTO(points);
     }

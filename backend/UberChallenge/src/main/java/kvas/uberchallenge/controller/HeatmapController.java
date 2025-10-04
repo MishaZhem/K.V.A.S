@@ -19,8 +19,8 @@ public class HeatmapController {
     public ResponseEntity<HeatmapResponseDTO> getHeatmap(
             @RequestParam String time,
             Authentication authentication) {
-        UUID driverId = extractDriverId(authentication);
-        HeatmapResponseDTO response = heatmapService.getHeatmap(driverId, time);
+        String username = authentication.getName();
+        HeatmapResponseDTO response = heatmapService.getHeatmap(username, time);
         return ResponseEntity.ok(response);
     }
 

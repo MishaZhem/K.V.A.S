@@ -49,6 +49,7 @@ public class DevSecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                         .requestMatchers("/api/api/driver/**").hasRole(Role.DRIVER.name())
+                        .requestMatchers("/api/driver/heatmap").hasRole(Role.DRIVER.name())
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable);
 

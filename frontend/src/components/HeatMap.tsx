@@ -7,16 +7,15 @@ const MapAnimation = () => {
     const mapContainer = useRef(null);
     const map = useRef<mapboxgl.Map | null>(null);
     const labelRef = useRef(null);
-    const animationRef = useRef(null);
 
     useEffect(() => {
         console.log('Map container:', map.current);
-        if (map.current) return; // Инициализируем карту только раз
+        if (map.current) return;
 
         map.current = new mapboxgl.Map({
             container: mapContainer.current as unknown as HTMLElement,
-            style: 'mapbox://styles/mapbox/light-v11', // Обновлённый стиль
-            center: [-74.0059, 40.7128], // initial map center in [lon, lat]
+            style: 'mapbox://styles/misha111/cmgccqs5000d601sabvn4hnli',
+            center: [-74.0059, 40.7128],
             zoom: 12
         });
 
@@ -28,7 +27,7 @@ const MapAnimation = () => {
                 type: 'circle',
                 source: {
                     type: 'geojson',
-                    data: 'https://raw.githubusercontent.com/MishaZhem/jsonTest/refs/heads/main/collisions1601.json' // replace this with the url of your own geojson
+                    data: 'https://raw.githubusercontent.com/MishaZhem/jsonTest/refs/heads/main/collisions1601.json'
                 },
                 paint: {
                     'circle-radius': [
@@ -57,7 +56,7 @@ const MapAnimation = () => {
                         5,
                         '#AA5E79'
                     ],
-                    'circle-opacity': 0.8
+                    'circle-opacity': 1
                 },
                 filter: ['==', ['number', ['get', 'Hour']], 12]
             });
@@ -110,16 +109,24 @@ const MapAnimation = () => {
     return (
         <div className="map-container">
             <div ref={mapContainer} className="map" />
-            <div ref={labelRef} className="country-label">
+            {/* <div ref={labelRef} className="country-label">
                 <input
                     id="slider"
-                    className="slider"
+                    className="slider opacity-30 bg-[#D9D9D9]"
                     type="range"
                     min="0"
                     max="23"
                     step="1"
                 />
+            </div> */}
+            <div className="absolute right-0 left-0 bottom-0 h-[100px] w-full backdrop-blur-md" style={{ maskImage: 'linear-gradient(to top, black, transparent)' }}>
+                <div className="flex justify-between items-center absolute left-6 right-6 bottom-4">
+                    {Array(20).fill(1).map((_, index) => (
+                        <div key={index} className="column bg-[#D9D9D9] opacity-20 w-[6px] h-[13px]"></div>
+                    ))}
+                </div>
             </div>
+
         </div>
     );
 };
