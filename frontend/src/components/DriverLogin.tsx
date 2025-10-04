@@ -2,10 +2,12 @@ import { useState } from "react";
 import endpoints from "../data/endpoints";
 import type { DriverInfo, UserContextType } from "../types/userContext";
 import InteractiveBackground from "./InteractiveBackground";
+import DriverRegisterWidget from "./DriverRegister";
 
 const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: UserContextType) => void }) => {
   const [loginResponseLine, setLoginResponseLine] = useState("");
-  return (
+  const [shouldUserRegister, setShouldUserRegister] = useState(false);
+  return shouldUserRegister ? <DriverRegisterWidget updateUserContext={updateUserContext} /> : (
     <div className="bg-[#0B0B0B] h-screen text-white flex flex-col min-h-screen justify-center items-center p-4">
 
       <InteractiveBackground />
@@ -62,7 +64,7 @@ const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: User
               const driverInfo = await response.json() as DriverInfo;
               setLoginResponseLine("good!");
               updateUserContext({
-                username: driverInfo.user.username,
+                username: driverInfo.username,
                 loginToken: authToken,
                 at: { lat: 0., lon: 0. },
                 isCourier: driverInfo.earnerType === "COURIER",
@@ -83,6 +85,7 @@ const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: User
             <button type="submit" className="w-full text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-white/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase tracking-widest border border-white/20 transition-colors duration-100">
               Log In
             </button>
+            <p onClick={() => {setShouldUserRegister(true);}}>No account? Sign up!</p>
           </form>
         </div>
       </div>

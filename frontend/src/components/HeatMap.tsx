@@ -103,18 +103,8 @@ const MapAnimation = () => {
     return (
         <div className="map-container">
             <div ref={mapContainer} className="map" />
-            {/* <div ref={labelRef} className="country-label">
-                <input
-                    id="slider"
-                    className="slider opacity-30 bg-[#D9D9D9]"
-                    type="range"
-                    min="0"
-                    max="23"
-                    step="1"
-                />
-            </div> */}
-            <div className="absolute right-0 left-0 bottom-0 h-[300px] w-full backdrop-blur-md" style={{ maskImage: 'linear-gradient(to top, black, transparent)' }}>
-                <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4'>
+            <div className="absolute right-0 left-0 bottom-0 h-[300px] w-full z-10 md:w-full overflow-x-auto overflow-y-hidden">
+                <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4 w-[1500px] pr-10 md:w-auto md:pr-0'>
                     <div className='graph z-10 mb-[20px]'>
                         <div className='flex justify-between w-full mb-[-25px]'>
                             <div className='flex flex-col gap-2 w-[500px]'>
@@ -148,9 +138,12 @@ const MapAnimation = () => {
                         ))}
                     </div>
                 </div>
-                <img src={points} alt="" className="opacity-30" />
             </div>
-
+            <div className="absolute right-0 left-0 bottom-0 h-[300px] w-full z-0" style={{ maskImage: 'linear-gradient(to top, black, transparent)' }}>
+                <img src={points} alt="" className="opacity-30 z-[-1] absolute inset-0 object-cover" />
+                <div className="backdrop-blur-lg absolute left-0 right-0 bottom-0 w-full h-full top-0 z-[5] bg-black/60 blur-xl">
+                </div>
+            </div>
         </div>
     );
 };

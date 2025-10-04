@@ -6,22 +6,13 @@ type UserContextType = {
     jobsThisWeek: number, // this can be always zero until we start talking about bonuses.
 }
 type DriverInfo = {
-    id: string,
-    user: {
-        id: string,
-        username: string,
-        passwordHash: string,
-        createdAt: Date,
-        updatedAt: Date,
-        role: string,
-    },
+    username: string,
     rating: number,
     earnerType: string,
+    experienceMonths: number,
     fuelType: string,
     isEv: boolean,
     vehicleType: string,
-    createdAt: Date,
-    updatedAt: Date,
 }
 type Loc = {
     lat: number,
