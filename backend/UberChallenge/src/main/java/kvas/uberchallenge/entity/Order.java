@@ -1,11 +1,12 @@
 package kvas.uberchallenge.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import kvas.uberchallenge.entity.enums.PaymentType;
+import kvas.uberchallenge.entity.enums.ProductType;
+import kvas.uberchallenge.entity.enums.WeatherType;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -20,8 +21,7 @@ import java.util.UUID;
 @Builder
 public class Order {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -45,6 +45,20 @@ public class Order {
     @NotNull
     private LocalDateTime startingTime;
 
+    @Column(name = "product_type")
+    @Enumerated(EnumType.ORDINAL)
+    @NotNull
+    private ProductType productType;
+
+    @Column(name = "payment_type")
+    @Enumerated(EnumType.ORDINAL)
+    @NotNull
+    private PaymentType paymentType;
+
+    @Column(name = "weather_type")
+    @Enumerated(EnumType.ORDINAL)
+    private WeatherType weatherType;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -53,4 +67,3 @@ public class Order {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
-

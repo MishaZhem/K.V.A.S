@@ -3,7 +3,7 @@ package kvas.uberchallenge.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import kvas.uberchallenge.constant.ApplicationConstants;
-import kvas.uberchallenge.entity.Role;
+import kvas.uberchallenge.entity.enums.Role;
 import kvas.uberchallenge.entity.Driver;
 import kvas.uberchallenge.entity.User;
 import kvas.uberchallenge.exception.UserAlreadyExistsException;

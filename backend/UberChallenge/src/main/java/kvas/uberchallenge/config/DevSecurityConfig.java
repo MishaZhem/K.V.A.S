@@ -1,6 +1,6 @@
 package kvas.uberchallenge.config;
 
-import kvas.uberchallenge.entity.Role;
+import kvas.uberchallenge.entity.enums.Role;
 import kvas.uberchallenge.exception.CustomAccessDeniedHandler;
 import kvas.uberchallenge.exception.CustomBasicAuthenticationEntryPoint;
 import kvas.uberchallenge.security.JWTTokenValidatorFilter;
