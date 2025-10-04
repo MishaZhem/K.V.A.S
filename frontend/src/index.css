@@ -13,11 +13,11 @@
 .text {
   color: #EAEAEA;
 }
-.pClass * {
+.Jet, .pClass * {
   font-family: "JetBrains Mono", monospace;
   font-optical-sizing: auto;
   font-weight: 400;
-  /* color: #EAEAEA; */
+  color: #EAEAEA;
   font-style: normal;
 }
 
@@ -54,6 +54,24 @@ body {
 }
 
 .slider {
-  width: 200px; /* Задаём ширину слайдера */
-  height: 20px; /* Высота для видимости */
+  width: 200px; 
+  height: 20px; 
+}
+
+.centerAbsoluteX {
+  left: 50%;
+  right: 50%;
+  transform: translateX(-50%);
+}
+
+.backLinesGreen {
+  position: absolute;
+  inset: 0rem;
+  background: linear-gradient(45deg, rgba(0, 150, 136, 0.3) 25%, transparent 25%, transparent 50%, rgba(0, 150, 136, 0.3) 50%, rgba(0, 150, 136, 0.3) 75%, transparent 75%, transparent);
+  background-size: 40px 40px; 
+  width: 35%;
+  left: 50%;
+  right: 50%;
+  transform: translateX(-50%);
+  opacity: 1; 
 }

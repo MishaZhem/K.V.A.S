@@ -89,7 +89,7 @@ public class HeatmapService {
             points.add(new ArrayList<>());
             for (int j = 0; j < 10; j++) {
                 points.get(i).add(new HeatmapPointDTO(
-                        40.7 + Math.random() * 0.1,
+                           40.7 + Math.random() * 0.1,
                         -74.0 + Math.random() * 0.1,
                         Math.random() * 100
                 ));
