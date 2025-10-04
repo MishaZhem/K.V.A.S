@@ -3,11 +3,12 @@ package kvas.uberchallenge.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import kvas.uberchallenge.entity.enums.EarnerType;
+import kvas.uberchallenge.entity.enums.FuelType;
+import kvas.uberchallenge.entity.enums.VehicleType;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -22,8 +23,7 @@ import java.util.UUID;
 @Builder
 public class Driver {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -38,16 +38,23 @@ public class Driver {
     private Double rating;
 
     @Column(name = "earner_type")
-    @NotBlank
-    private String earnerType;
+    @Enumerated(EnumType.ORDINAL)
+    @NotNull
+    private EarnerType earnerType;
 
     @Column(name = "fuel_type")
-    @NotBlank
-    private String fuelType;
+    @Enumerated(EnumType.ORDINAL)
+    @NotNull
+    private FuelType fuelType;
+
+    @Column(name = "is_ev")
+    @NotNull
+    private Boolean isEv;
 
     @Column(name = "vehicle_type")
-    @NotBlank
-    private String vehicleType;
+    @Enumerated(EnumType.ORDINAL)
+    @NotNull
+    private VehicleType vehicleType;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -57,4 +64,3 @@ public class Driver {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
-

@@ -50,7 +50,7 @@ public class HeatmapService {
                     .map(point -> new HeatmapPointDTO(point.get(0), point.get(1), point.get(2)))
                     .collect(Collectors.toList());
 
-            return new HeatmapResponseDTO(points);
+            return new HeatmapResponseDTO(List.of(points));
         } catch (Exception e) {
             return getMockHeatmap();
         }
@@ -65,7 +65,7 @@ public class HeatmapService {
                     Math.random() * 100
             )); 
         }
-        return new HeatmapResponseDTO(points);
+        return new HeatmapResponseDTO(List.of(points));
     }
 }
 

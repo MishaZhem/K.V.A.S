@@ -1,4 +1,4 @@
-package kvas.uberchallenge.model;
+package kvas.uberchallenge.model.job;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobListResponseDTO {
-    private List<JobItemDTO> jobs;
+    private List<JobItemResponseDTO> jobs;
 }
 

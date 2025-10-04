@@ -3,10 +3,14 @@ package kvas.uberchallenge.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import kvas.uberchallenge.constant.ApplicationConstants;
-import kvas.uberchallenge.entity.Role;
+import kvas.uberchallenge.entity.enums.EarnerType;
+import kvas.uberchallenge.entity.enums.FuelType;
+import kvas.uberchallenge.entity.enums.Role;
 import kvas.uberchallenge.entity.Driver;
 import kvas.uberchallenge.entity.User;
+import kvas.uberchallenge.entity.enums.VehicleType;
 import kvas.uberchallenge.exception.UserAlreadyExistsException;
+import kvas.uberchallenge.helper.EnumMappingHelper;
 import kvas.uberchallenge.helper.TimeTranslator;
 import kvas.uberchallenge.model.authentification.LogInRequestDTO;
 import kvas.uberchallenge.model.authentification.RegisterRequestDTO;
@@ -34,8 +38,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final DriverRepository driverRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationConstants applicationConstants;
-    private final PasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
     private final Environment env;
 
@@ -51,13 +53,22 @@ public class AuthService {
             Driver driver = Driver.builder()
                     .user(user)
                     .rating(0.0)
-                    .earnerType(request.getEarnerType())
-                    .fuelType(request.getFuelType())
-                    .vehicleType(request.getVehicleType())
+                    .earnerType(EnumMappingHelper.getEarnerTypeByName(request.getEarnerType()))
+                    .fuelType(EnumMappingHelper.getFuelTypeByName(request.getFuelType()))
+                    .vehicleType(EnumMappingHelper.getVehicleTypeByName(request.getVehicleType()))
+                    .isEv(request.getIsEv())
                     .build();
+
             driver = driverRepository.save(driver);
 
             return RegisterResponseDTO.builder()
+                    .userId(driver.getId())
+                    .driverId(driver.getId())
+                    .username(user.getUsername())
+                    .earnerType(driver.getEarnerType().name())
+                    .fuelType(driver.getFuelType().name())
+                    .isEv(driver.getIsEv())
+                    .vehicleType(driver.getVehicleType().name())
                     .build();
         } catch (DataIntegrityViolationException e) {
             throw new UserAlreadyExistsException("User with username '" + request.getUsername() + "' already exists");
@@ -76,7 +87,7 @@ public class AuthService {
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         int expirationTimeHours = Integer.parseInt(env.getProperty(ApplicationConstants.JWT_EXPIRATION_KEY, String.valueOf(ApplicationConstants.JWT_EXPIRATION_TIME_HOURS)));
 
-        return Jwts.builder().issuer("CMAS TEST SERVER").subject("JWT Token")
+        return Jwts.builder().issuer("Uber Challenge").subject("JWT Token")
                 .claim("username", authentication.getName())
                 .claim("authorities", authentication.getAuthorities().stream().map(
                         GrantedAuthority::getAuthority).collect(Collectors.joining(",")))

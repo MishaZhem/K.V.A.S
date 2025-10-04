@@ -1,4 +1,4 @@
-package kvas.uberchallenge.entity;
+package kvas.uberchallenge.entity.enums;
 
 public enum Role {
     DRIVER,

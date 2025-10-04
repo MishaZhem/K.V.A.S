@@ -1,5 +1,6 @@
 package kvas.uberchallenge.config;
 
+import kvas.uberchallenge.entity.enums.Role;
 import kvas.uberchallenge.exception.CustomAccessDeniedHandler;
 import kvas.uberchallenge.exception.CustomBasicAuthenticationEntryPoint;
 import kvas.uberchallenge.security.JWTTokenValidatorFilter;
@@ -47,7 +48,8 @@ public class DevSecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
-                        .requestMatchers("/api/driver/heatmap").permitAll()
+                        .requestMatchers("/api/api/driver/**").hasRole(Role.DRIVER.name())
+                        .requestMatchers("/api/driver/heatmap").hasRole(Role.DRIVER.name())
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable);
 
