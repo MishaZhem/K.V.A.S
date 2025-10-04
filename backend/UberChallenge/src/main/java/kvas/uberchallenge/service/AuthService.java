@@ -3,7 +3,7 @@ package kvas.uberchallenge.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import kvas.uberchallenge.constant.ApplicationConstants;
-import kvas.uberchallenge.entitiy.enums.Role;
+import kvas.uberchallenge.entity.Role;
 import kvas.uberchallenge.entity.Driver;
 import kvas.uberchallenge.entity.User;
 import kvas.uberchallenge.exception.UserAlreadyExistsException;
@@ -22,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;

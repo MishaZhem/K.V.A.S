@@ -1,8 +1,10 @@
 package kvas.uberchallenge.controller;
 
 import jakarta.validation.Valid;
-import kvas.uberchallenge.model.*;
-import kvas.uberchallenge.service.DriverService;
+import kvas.uberchallenge.model.JobListResponseDTO;
+import kvas.uberchallenge.model.RouteAssessmentRequestDTO;
+import kvas.uberchallenge.model.RouteAssessmentResponseDTO;
+import kvas.uberchallenge.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -13,27 +15,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/driver")
 @RequiredArgsConstructor
-public class DriverController {
-    private final DriverService driverService;
-
-    @GetMapping("/route")
-    public ResponseEntity<EarningsGraphResponseDTO> getRoute(
-            @RequestParam Double currentLat,
-            @RequestParam Double currentLon,
-            Authentication authentication) {
-        UUID driverId = extractDriverId(authentication);
-        EarningsGraphResponseDTO response = driverService.getEarningsGraph(driverId, currentLat, currentLon);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/heatmap")
-    public ResponseEntity<HeatmapResponseDTO> getHeatmap(
-            @RequestParam String time,
-            Authentication authentication) {
-        UUID driverId = extractDriverId(authentication);
-        HeatmapResponseDTO response = driverService.getHeatmap(driverId, time);
-        return ResponseEntity.ok(response);
-    }
+public class JobController {
+    private final JobService jobService;
 
     @GetMapping("/jobs")
     public ResponseEntity<JobListResponseDTO> getJobs(
@@ -41,7 +24,7 @@ public class DriverController {
             @RequestParam Double currentLon,
             Authentication authentication) {
         UUID driverId = extractDriverId(authentication);
-        JobListResponseDTO response = driverService.getJobs(driverId, currentLat, currentLon);
+        JobListResponseDTO response = jobService.getJobs(driverId, currentLat, currentLon);
         return ResponseEntity.ok(response);
     }
 
@@ -50,7 +33,7 @@ public class DriverController {
             @Valid @RequestBody RouteAssessmentRequestDTO request,
             Authentication authentication) {
         UUID driverId = extractDriverId(authentication);
-        RouteAssessmentResponseDTO response = driverService.assessRoute(
+        RouteAssessmentResponseDTO response = jobService.assessRoute(
                 driverId,
                 request.getCurrentDriverLoc(),
                 request.getPickupLoc(),
@@ -60,7 +43,6 @@ public class DriverController {
     }
 
     private UUID extractDriverId(Authentication authentication) {
-        // Assuming JWT filter sets driverId in authentication
         if (authentication != null && authentication.getDetails() instanceof UUID) {
             return (UUID) authentication.getDetails();
         }
