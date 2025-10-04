@@ -103,18 +103,8 @@ const MapAnimation = () => {
     return (
         <div className="map-container">
             <div ref={mapContainer} className="map" />
-            {/* <div ref={labelRef} className="country-label">
-                <input
-                    id="slider"
-                    className="slider opacity-30 bg-[#D9D9D9]"
-                    type="range"
-                    min="0"
-                    max="23"
-                    step="1"
-                />
-            </div> */}
-            <div className="absolute right-0 left-0 bottom-0 h-[300px] w-full z-10">
-                <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4'>
+            <div className="absolute right-0 left-0 bottom-0 h-[300px] w-full z-10 md:w-full overflow-x-auto">
+                <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4 w-[1500px] pr-10 md:w-auto md:pr-0'>
                     <div className='graph z-10 mb-[20px]'>
                         <div className='flex justify-between w-full mb-[-25px]'>
                             <div className='flex flex-col gap-2 w-[500px]'>
