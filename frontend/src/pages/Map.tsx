@@ -18,6 +18,7 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
         //     return;
         // }
         if (user) {
+            if (user.username === "admin") {setJobs(jobs_test); return; }
             if (window.localStorage.getItem('uberapp-jwt') === null) { return; }
             const token = window.localStorage.getItem('uberapp-jwt') as string;
             fetch(endpoints.jobs.view, {
