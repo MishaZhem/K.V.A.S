@@ -1,7 +1,6 @@
 package kvas.uberchallenge.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class HeatmapResponseDTO {
-    private List<HeatmapPointDTO> points;
+    private List<List<HeatmapPointDTO>> points;
 }
 

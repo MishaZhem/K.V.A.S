@@ -8,8 +8,7 @@ const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: User
   const [loginResponseLine, setLoginResponseLine] = useState("");
   const [shouldUserRegister, setShouldUserRegister] = useState(false);
   return shouldUserRegister ? <DriverRegisterWidget updateUserContext={updateUserContext} /> : (
-    <div className="bg-[#0B0B0B] h-screen text-white flex flex-col min-h-screen justify-center items-center p-4">
-
+    <div className="bg-black_primary h-screen text-white_primary flex flex-col min-h-screen justify-center items-center p-4">
       <InteractiveBackground />
 
       <div className="group relative w-full max-w-sm rounded-lg border border-white/10 p-8 bg-[#0B0B0B] z-10">
@@ -17,14 +16,14 @@ const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: User
 
         <div className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-100 group-hover:opacity-100">
           <div className="absolute inset-0 border border-white/20 rounded-lg"></div>
-          <div className="bg-white absolute -left-px -top-px z-10 size-2"></div>
-          <div className="bg-white absolute -right-px -top-px z-10 size-2"></div>
-          <div className="bg-white absolute -bottom-px -left-px z-10 size-2"></div>
-          <div className="bg-white absolute -bottom-px -right-px z-10 size-2"></div>
+          <div className="bg-white_primary absolute -left-px -top-px z-10 size-2"></div>
+          <div className="bg-white_primary absolute -right-px -top-px z-10 size-2"></div>
+          <div className="bg-white_primary absolute -bottom-px -left-px z-10 size-2"></div>
+          <div className="bg-white_primary absolute -bottom-px -right-px z-10 size-2"></div>
         </div>
 
         <div className="relative z-30">
-          <p className="text-2xl font-bold mb-6 font-mono text-center text-white/90 tracking-wider">
+          <p className="text-2xl font-bold mb-6 font-mono text-center text-white_primary tracking-wider">
             Login
           </p>
           <form className="space-y-6" onSubmit={async (ev) => {
@@ -75,17 +74,17 @@ const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: User
           }}>
             {loginResponseLine && <p id="errorline" className="text-red-500 text-center text-sm">{loginResponseLine}</p>}
             <div>
-              <label htmlFor="driverUsername" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Username</label>
-              <input id="driverUsername" name="driverUsername" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
+              <label htmlFor="driverUsername" className="block mb-2 text-sm font-medium text-white_secondary uppercase tracking-wider">Username</label>
+              <input id="driverUsername" name="driverUsername" className="bg-black/30 border border-white/20 text-white_primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
             </div>
             <div>
-              <label htmlFor="driverPassword" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Password</label>
-              <input type="password" id="driverPassword" name="driverPassword" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
+              <label htmlFor="driverPassword" className="block mb-2 text-sm font-medium text-white_secondary uppercase tracking-wider">Password</label>
+              <input type="password" id="driverPassword" name="driverPassword" className="bg-black/30 border border-white/20 text-white_primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
             </div>
-            <button type="submit" className="w-full text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-white/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase tracking-widest border border-white/20 transition-colors duration-100">
+            <button type="submit" className="w-full text-white_primary textwhite bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-white/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase tracking-widest border border-white/20 transition-colors duration-100">
               Log In
             </button>
-            <p onClick={() => {setShouldUserRegister(true);}}>No account? Sign up!</p>
+            <p onClick={() => { setShouldUserRegister(true); }}>No account? Sign up!</p>
           </form>
         </div>
       </div>
