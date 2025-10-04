@@ -1,5 +1,5 @@
 const endpoints = {
-    login: "http://localhost:8082/api/driver/login", // POST
+    login: "http://localhost:8082/api/auth/login", // POST
     jobs: {
         // POST get all jobs within 2kms from the user.
         view: "http://localhost:8082/api/jobs/view?r=2km", // POST

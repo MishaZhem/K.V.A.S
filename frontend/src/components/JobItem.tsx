@@ -1,34 +1,32 @@
 import type { JobItem } from "../types/job";
 
-const JobItemDisplay = ({job}: {job: JobItem}) => {
-    const time = new Date(job.startTimestamp);
+const JobItemDisplay = ({jobs, jobi}: {jobs: JobItem[], jobi: number}) => {
+    const job = jobs[jobi];
+    const time = new Date(jobs[jobi].startTimestamp);
     return (
-        <div className="grid grid-cols-2 gap-4">
-            <div className="job-item
-            bg-white
-            border
-            border-gray-200
-            rounded-lg
+        <div className="gap-8">
+            <div className={`job-item
+            text-gray-400
+            bg-gray-900
+            border-2
+            rounded-4xl
+            border-gray-700
             shadow-sm
             p-4
-            mb-4
+            ${jobi >= jobs.length - 1 ? "" : "mb-4 pb-5"
+            }
             hover:shadow-md
             transition-shadow
             duration-200
             cursor-pointer
-            flex
-            flex-col
-            space-y-2
-">
+`}>
                 <p>From {job.from.lat},{job.from.lon}</p>
                 <p>To {job.to.lat},{job.to.lon}.</p>
-                <p>Expected earning is ${job.potentialEarningCents / 100}</p>
+                <p>Expected earning is </p>
+                <p className="text-green-400"><b>EUR {job.potentialEarningCents / 100}</b></p>
                 <p>Starts at {`${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`}</p>
-                
-            </div>
-            <div>
-                <button className="primary">See distance to</button>
-                <button className="">Go to pickup</button>
+                <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-m px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mr-4">See distance</button>
+                <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-m px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Go!</button>
             </div>
         </div>);
 }

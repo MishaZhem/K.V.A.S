@@ -5,7 +5,7 @@ type JobItem = {
     from: Loc, // Loc = {lat: number; lon: number}
     to: Loc,
     potentialEarningCents: number,
-    earningRateCents: number,
+    // earningRateCents: number,
     startTimestamp: number,
 }
 export { type JobItem };

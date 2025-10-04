@@ -1,34 +1,43 @@
 import { useEffect, useState } from "react";
 import DriverLoginWidget from "../../components/DriverLogin";
-import type { UserContext } from "../../types/userContext";
+import type { UserContextType } from "../../types/userContext";
 import jobs_test from "../../data/test_jobs.json";
 import Jobs from "../../components/Jobs";
 import type { JobItem } from "../../types/job";
 import endpoints from "../../data/endpoints";
-const Home = () => {
-    const [userContext, setUserContext] =  useState<UserContext | undefined>(undefined);
+import Navbar from "../../components/Navbar";
+import Profile from "../../components/Profile";
+const Home = ({user}: {user: UserContextType | undefined}) => {
+
     const [jobs, setJobs] =  useState<JobItem[]>([]);
+    const [jobsShown, setJobsShown] =  useState(false);
+    const [profileShown, setProfileShown] =  useState(false);    
     useEffect(() => {
-        if (userContext && userContext.username === "Admin") {
+        if (user && user.username === "admin") {
             setJobs(jobs_test);
             return;
         }
-        if (userContext) {
+        if (user) {
             fetch(endpoints.jobs.view, {
                 method: "GET",
                 mode: "cors",
             }).then((v) => v.json()).then((v) => setJobs(v as JobItem[]))
         }
-    }, [userContext])
+    }, [user])
+    if (user) {
     return (
-        <div className="text-3xl font-bold underline">
-            <h1>Hi, {userContext ? userContext.username : "nobody"}</h1>
-            <DriverLoginWidget updateUserContext={(context) => {
-                setUserContext(context);
-            }}></DriverLoginWidget>
-            <Jobs jobs={jobs}></Jobs>
+        <div className="bg-black h-screen text-4xl">
+            <div className="fixed right-0 w-1/4 bg-black shadow-lg z-50 flex flex-col gap-4 p-4 overflow-y-auto h-1/2">
+                <Navbar userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown}></Navbar>
+                <Jobs shown={jobsShown} jobs={jobs}></Jobs>
+                <Profile shown={profileShown} userContext={user}></Profile>
+            </div>
+
         </div>
-    )
+    );
+} else {
+        <div>ERROR Not logged in!!</div>
+    }
 }
 
 export default Home;
