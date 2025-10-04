@@ -12,4 +12,3 @@ public class RouteAssessmentResponseDTO {
     private Integer expectedEarnNetCents;
     private Integer moneyPerHourCents;
 }
-

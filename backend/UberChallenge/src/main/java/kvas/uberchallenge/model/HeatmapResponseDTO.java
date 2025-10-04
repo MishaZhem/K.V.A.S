@@ -10,6 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HeatmapResponseDTO {
-    private List<HeatmapPointDTO> points;
+    private List<List<HeatmapPointDTO>> points;
 }
 
