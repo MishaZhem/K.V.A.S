@@ -5,6 +5,7 @@ import kvas.uberchallenge.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -15,6 +16,9 @@ public class DriverInfoService {
     public Driver getDriverById(UUID driverId) {
         return driverRepository.findById(driverId)
                 .orElseThrow(() -> new RuntimeException("Driver not found"));
+    }
+    public Optional<Driver> getDriverByName(String driverName) {
+        return driverRepository.getDriverByUser_Username(driverName);
     }
 }
 
