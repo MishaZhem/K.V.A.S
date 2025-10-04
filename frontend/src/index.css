@@ -10,12 +10,14 @@
 .mapboxgl-ctrl-logo, .mapboxgl-ctrl-bottom-right {
   display: none !important;
 }
-
+.text {
+  color: #EAEAEA;
+}
 p {
   font-family: "JetBrains Mono", monospace;
   font-optical-sizing: auto;
   font-weight: 400;
-  color: #EAEAEA;
+  /* color: #EAEAEA; */
   font-style: normal;
 }
 

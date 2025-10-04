@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { user } from "../assets";
 import type { UserContextType } from "../types/userContext";
 
-const TopMenu = ({userContext, shouldRenderJobs, jobsRendered, shouldRenderProfile, profileRendered}: {
+const Navbar = ({userContext, shouldRenderJobs, jobsRendered, shouldRenderProfile, profileRendered}: {
     userContext: UserContextType, 
     shouldRenderJobs: (b: boolean) => void, 
     shouldRenderProfile: (b: boolean) => void,
@@ -11,10 +10,9 @@ const TopMenu = ({userContext, shouldRenderJobs, jobsRendered, shouldRenderProfi
 }) => {
     const [activePageIndex, setActivePageIndex] = useState<number | null>(null);
     return (
-        <>
-            <div className="text-[#ABABAB] bg-[#171717] w-1/8 absolute rounded-[999px] border-3 border-[#434343] right-10 top-10 p-2 pl-3 shadow-xl/30">
-                <div className="flex gap-3 opacity-70 justify-around items-center">
-                    <button onClick={() => {
+        <div className="navbar bg-[#171717] absolute rounded-[999px] border-3 border-[#434343] right-10 top-10 p-2 pl-3 shadow-xl/30">
+            <span className="navbar-items flex gap-3 items-center opacity-70">
+            <button onClick={() => {
                 shouldRenderJobs(!jobsRendered); 
                 shouldRenderProfile(false); 
                 setActivePageIndex(0)}
@@ -24,11 +22,9 @@ const TopMenu = ({userContext, shouldRenderJobs, jobsRendered, shouldRenderProfi
                 shouldRenderJobs(false); 
                 setActivePageIndex(1)}
                 }>{profileRendered ? "> profile <" : "[ profile ]"}</button>
-                    <img src={user} className="w-8" alt="" />
-                </div>
-            </div>
-        </>
-    );
-};
+            <text>{userContext.username}</text></span>
+        </div>
+    )
+}
 
-export default TopMenu;
+export default Navbar;
