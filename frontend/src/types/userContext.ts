@@ -1,4 +1,4 @@
-type UserContext = {
+type UserContextType = {
     username: string,
     loginToken: string,
     at: Loc,
@@ -10,4 +10,4 @@ type Loc = {
     lon: number,
 }
 
-export {type UserContext, type Loc}
+export {type UserContextType, type Loc}

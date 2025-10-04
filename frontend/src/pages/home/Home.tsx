@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DriverLoginWidget from "../../components/DriverLogin";
 import type { UserContext } from "../../types/userContext";
 import jobs_test from "../../data/test_jobs.json";

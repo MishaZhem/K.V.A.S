@@ -1,7 +1,7 @@
 import { useState } from "react";
 import endpoints from "../data/endpoints";
 import getSHA256Hash from "../data/utils";
-import type { UserContext } from "../types/userContext";
+import type { UserContextType } from "../types/userContext";
 
 const DriverLoginWidget = ({updateUserContext}: {updateUserContext: (newUserContext: UserContext) => void}) => {
     const [loginResponseLine, setLoginResponseLine] = useState("");
@@ -30,7 +30,7 @@ const DriverLoginWidget = ({updateUserContext}: {updateUserContext: (newUserCont
                 setLoginResponseLine("Bad!");
             } else {
                 setLoginResponseLine("good!");
-                updateUserContext(await response.json() as UserContext);
+                updateUserContext(await response.json() as UserContextType);
             }
         }}>
             <p id="errorline">{loginResponseLine}</p>
