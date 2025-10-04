@@ -7,9 +7,16 @@
 
 }
 
-* {
-  margin: 0;
-  padding: 0;
+.mapboxgl-ctrl-logo, .mapboxgl-ctrl-bottom-right {
+  display: none !important;
+}
+
+p {
+  font-family: "JetBrains Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  color: #EAEAEA;
+  font-style: normal;
 }
 
 body {

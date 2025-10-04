@@ -47,6 +47,7 @@ public class DevSecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                        .requestMatchers("/api/driver/heatmap").permitAll()
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable);
 
