@@ -1,0 +1,162 @@
+[
+  {
+    "id": "job-001",
+    "from": { "lat": 52.3702, "lon": 4.8952 },
+    "to": { "lat": 52.3676, "lon": 4.9041 },
+    "city": "Amsterdam",
+    "potentialEarningCents": 1250,
+    "startTimestamp": "2025-10-04T08:12:34Z"
+  },
+  {
+    "id": "job-002",
+    "from": { "lat": 52.0928, "lon": 5.1045 },
+    "to": { "lat": 52.0809, "lon": 5.1277 },
+    "city": "Utrecht",
+    "potentialEarningCents": 1750,
+    "startTimestamp": "2025-10-04T09:22:10Z"
+  },
+  {
+    "id": "job-003",
+    "from": { "lat": 51.9244, "lon": 4.4777 },
+    "to": { "lat": 51.9153, "lon": 4.4856 },
+    "city": "Rotterdam",
+    "potentialEarningCents": 2100,
+    "startTimestamp": "2025-10-04T10:45:50Z"
+  },
+  {
+    "id": "job-004",
+    "from": { "lat": 52.0116, "lon": 4.3571 },
+    "to": { "lat": 52.0037, "lon": 4.3559 },
+    "city": "Delft",
+    "potentialEarningCents": 950,
+    "startTimestamp": "2025-10-04T11:05:20Z"
+  },
+  {
+    "id": "job-005",
+    "from": { "lat": 52.3791, "lon": 4.6399 },
+    "to": { "lat": 52.3914, "lon": 4.6463 },
+    "city": "Haarlem",
+    "potentialEarningCents": 1350,
+    "startTimestamp": "2025-10-04T07:58:15Z"
+  },
+  {
+    "id": "job-006",
+    "from": { "lat": 51.4416, "lon": 5.4697 },
+    "to": { "lat": 51.4502, "lon": 5.4765 },
+    "city": "Eindhoven",
+    "potentialEarningCents": 1800,
+    "startTimestamp": "2025-10-04T13:15:45Z"
+  },
+  {
+    "id": "job-007",
+    "from": { "lat": 50.8514, "lon": 5.69 },
+    "to": { "lat": 50.8541, "lon": 5.7032 },
+    "city": "Maastricht",
+    "potentialEarningCents": 2500,
+    "startTimestamp": "2025-10-04T14:30:00Z"
+  },
+  {
+    "id": "job-008",
+    "from": { "lat": 53.2194, "lon": 6.5665 },
+    "to": { "lat": 53.213, "lon": 6.5749 },
+    "city": "Groningen",
+    "potentialEarningCents": 1600,
+    "startTimestamp": "2025-10-04T12:05:25Z"
+  },
+  {
+    "id": "job-009",
+    "from": { "lat": 52.52, "lon": 13.405 },
+    "to": { "lat": 52.5172, "lon": 13.3889 },
+    "city": "Berlin",
+    "potentialEarningCents": 3100,
+    "startTimestamp": "2025-10-04T15:50:10Z"
+  },
+  {
+    "id": "job-010",
+    "from": { "lat": 48.8566, "lon": 2.3522 },
+    "to": { "lat": 48.8655, "lon": 2.3212 },
+    "city": "Paris",
+    "potentialEarningCents": 4500,
+    "startTimestamp": "2025-10-04T16:10:00Z"
+  },
+  {
+    "id": "job-011",
+    "from": { "lat": 51.5074, "lon": -0.1278 },
+    "to": { "lat": 51.5155, "lon": -0.1419 },
+    "city": "London",
+    "potentialEarningCents": 5000,
+    "startTimestamp": "2025-10-04T17:20:35Z"
+  },
+  {
+    "id": "job-012",
+    "from": { "lat": 40.7128, "lon": -74.006 },
+    "to": { "lat": 40.7306, "lon": -73.9866 },
+    "city": "New York",
+    "potentialEarningCents": 7200,
+    "startTimestamp": "2025-10-04T18:45:10Z"
+  },
+  {
+    "id": "job-013",
+    "from": { "lat": 34.0522, "lon": -118.2437 },
+    "to": { "lat": 34.0407, "lon": -118.2468 },
+    "city": "Los Angeles",
+    "potentialEarningCents": 6900,
+    "startTimestamp": "2025-10-04T19:05:55Z"
+  },
+  {
+    "id": "job-014",
+    "from": { "lat": 41.9028, "lon": 12.4964 },
+    "to": { "lat": 41.9002, "lon": 12.4833 },
+    "city": "Rome",
+    "potentialEarningCents": 4200,
+    "startTimestamp": "2025-10-04T20:15:00Z"
+  },
+  {
+    "id": "job-015",
+    "from": { "lat": 55.7558, "lon": 37.6173 },
+    "to": { "lat": 55.7512, "lon": 37.603 },
+    "city": "Moscow",
+    "potentialEarningCents": 5100,
+    "startTimestamp": "2025-10-04T21:40:20Z"
+  },
+  {
+    "id": "job-016",
+    "from": { "lat": 35.6895, "lon": 139.6917 },
+    "to": { "lat": 35.6828, "lon": 139.7595 },
+    "city": "Tokyo",
+    "potentialEarningCents": 8300,
+    "startTimestamp": "2025-10-04T22:55:45Z"
+  },
+  {
+    "id": "job-017",
+    "from": { "lat": 37.7749, "lon": -122.4194 },
+    "to": { "lat": 37.7843, "lon": -122.4089 },
+    "city": "San Francisco",
+    "potentialEarningCents": 6700,
+    "startTimestamp": "2025-10-04T23:10:10Z"
+  },
+  {
+    "id": "job-018",
+    "from": { "lat": -33.8688, "lon": 151.2093 },
+    "to": { "lat": -33.8708, "lon": 151.2046 },
+    "city": "Sydney",
+    "potentialEarningCents": 6400,
+    "startTimestamp": "2025-10-05T00:25:30Z"
+  },
+  {
+    "id": "job-019",
+    "from": { "lat": 19.4326, "lon": -99.1332 },
+    "to": { "lat": 19.4269, "lon": -99.1411 },
+    "city": "Mexico City",
+    "potentialEarningCents": 3500,
+    "startTimestamp": "2025-10-05T01:35:00Z"
+  },
+  {
+    "id": "job-020",
+    "from": { "lat": -23.5505, "lon": -46.6333 },
+    "to": { "lat": -23.5591, "lon": -46.6558 },
+    "city": "São Paulo",
+    "potentialEarningCents": 4100,
+    "startTimestamp": "2025-10-05T02:45:50Z"
+  }
+]

@@ -2,6 +2,7 @@ type UserContext = {
     username: string,
     loginToken: string,
     at: Loc,
+    jobsThisWeek: number,
 }
 type Loc = {
     lat: number,
