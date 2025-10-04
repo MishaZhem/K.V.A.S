@@ -6,9 +6,9 @@ import InteractiveBackground from "./InteractiveBackground";
 const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: UserContextType) => void }) => {
   const [loginResponseLine, setLoginResponseLine] = useState("");
   return (
-    <div className="bg-[#0B0B0B] h-screen text-white flex flex-col min-h-screen justify-center items-center font-sans p-4">
+    <div className="bg-[#0B0B0B] h-screen text-white flex flex-col min-h-screen justify-center items-center p-4">
 
-      <InteractiveBackground /> {/* <--- NEW COMPONENT */}
+      <InteractiveBackground />
 
       <div className="group relative w-full max-w-sm rounded-lg border border-white/10 p-8 bg-[#0B0B0B] z-10">
         <div className="pointer-events-none absolute inset-0 z-10 rounded-lg bg-gradient-to-b from-white/[.07] to-transparent opacity-0 transition-opacity duration-100 group-hover:opacity-100"></div>
@@ -22,9 +22,9 @@ const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: User
         </div>
 
         <div className="relative z-30">
-          <h2 className="text-2xl font-bold mb-6 text-center text-white/90 tracking-wider">
+          <p className="text-2xl font-bold mb-6 font-mono text-center text-white/90 tracking-wider">
             Login
-          </h2>
+          </p>
           <form className="space-y-6" onSubmit={async (ev) => {
             ev.preventDefault();
             const usernameInput = (document.getElementById('driverUsername') as HTMLInputElement).value;
