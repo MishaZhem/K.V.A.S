@@ -1,0 +1,3 @@
+const Jobs = ({jobs}: {jobs: }) => {
+
+}
