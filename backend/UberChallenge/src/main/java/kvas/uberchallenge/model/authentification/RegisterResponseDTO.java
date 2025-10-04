@@ -5,9 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterResponseDTO {
-    @Builder.Default
-    private String message = "Zaebis";
+    private UUID userId;
+    private UUID driverId;
+    private String username;
+    private String earnerType;
+    private String vehicleType;
+    private String fuelType;
+    private Boolean isEv;
 }
