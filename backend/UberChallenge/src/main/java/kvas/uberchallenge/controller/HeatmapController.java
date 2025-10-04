@@ -19,17 +19,11 @@ public class HeatmapController {
     public ResponseEntity<HeatmapResponseDTO> getHeatmap(
             @RequestParam Integer hour,
             Authentication authentication) {
+
         String username = authentication.getName();
         HeatmapResponseDTO response = heatmapService.getHeatmap(username, hour);
 
         return ResponseEntity.ok(response);
-    }
-
-    private UUID extractDriverId(Authentication authentication) {
-        if (authentication != null && authentication.getDetails() instanceof UUID) {
-            return (UUID) authentication.getDetails();
-        }
-        throw new RuntimeException("Driver ID not found in authentication");
     }
 }
 

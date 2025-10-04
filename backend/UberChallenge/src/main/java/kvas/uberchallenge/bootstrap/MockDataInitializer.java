@@ -29,14 +29,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MockDataInitializer implements CommandLineRunner {
 
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
-    private final DriverRepository driverRepository;
     private final HeatMapPointRepository heatMapPointRepository;
 
     @Override
     public void run(String... args) throws Exception {
         generateOrders();
-        generateDrivers();
         generateHeatMapData();
     }
 
@@ -105,39 +102,6 @@ public class MockDataInitializer implements CommandLineRunner {
         } catch (Exception e) {
             log.error("Failed to read or process HeatMap CSV files.", e);
         }
-    }
-
-    private void generateDrivers()
-    {
-        if (userRepository.count() > 0 && driverRepository.count() > 0) {
-            log.info("Users or Drivers already exist in the database. Skipping mock data creation.");
-            return;
-        }
-
-        log.info("Generating mock...");
-        List<Order> mockOrders = new ArrayList<>();
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-
-        ProductType[] productTypes = ProductType.values();
-        PaymentType[] paymentTypes = PaymentType.values();
-        WeatherType[] weatherTypes = WeatherType.values();
-
-        for (int i = 0; i < 500; i++) {
-            Order order = Order.builder()
-                    .startLat(random.nextDouble(50.00000, 53.00000))
-                    .startLon(random.nextDouble(4.00000, 7.00000))
-                    .endLat(random.nextDouble(50.00000, 53.00000))
-                    .endLon(random.nextDouble(4.00000, 7.00000))
-                    .startingTime(random.nextInt(0, 5))
-                    .productType(productTypes[random.nextInt(productTypes.length)])
-                    .paymentType(paymentTypes[random.nextInt(paymentTypes.length)])
-                    .weatherType(weatherTypes[random.nextInt(weatherTypes.length)])
-                    .build();
-            mockOrders.add(order);
-        }
-
-        orderRepository.saveAll(mockOrders);
-        log.info("Successfully created {} mock orders.", mockOrders.size());
     }
 
     private void generateOrders()
