@@ -1,17 +1,23 @@
 package kvas.uberchallenge.bootstrap;
 
+import kvas.uberchallenge.entity.HeatMapPoint;
 import kvas.uberchallenge.entity.Order;
 import kvas.uberchallenge.entity.enums.PaymentType;
 import kvas.uberchallenge.entity.enums.ProductType;
 import kvas.uberchallenge.entity.enums.WeatherType;
 import kvas.uberchallenge.repository.DriverRepository;
+import kvas.uberchallenge.repository.HeatMapPointRepository;
 import kvas.uberchallenge.repository.OrderRepository;
 import kvas.uberchallenge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +47,7 @@ public class MockDataInitializer implements CommandLineRunner {
         List<HeatMapPoint> heatMapPoints = new ArrayList<>();
         try {
             PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-            Resource[] resources = resolver.getResources("classpath:StaticHeatMap/HeatMap-*-*.csv");
+            Resource[] resources = resolver.getResources("classpath:heatmap/HeatMap-*-*.csv");
 
             for (Resource resource : resources) {
                 String filename = resource.getFilename();
@@ -113,7 +119,7 @@ public class MockDataInitializer implements CommandLineRunner {
         PaymentType[] paymentTypes = PaymentType.values();
         WeatherType[] weatherTypes = WeatherType.values();
 
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 100; i++) {
             Order order = Order.builder()
                     .startLat(random.nextDouble(50.00000, 53.00000))
                     .startLon(random.nextDouble(4.00000, 7.00000))

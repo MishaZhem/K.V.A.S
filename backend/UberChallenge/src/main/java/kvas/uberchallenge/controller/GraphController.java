@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GraphController {
     private final JobService jobService;
 
-    @GetMapping("/jobs")
+    @GetMapping("/graph")
     public ResponseEntity<JobListResponseDTO> getJobs(
             @RequestParam Double currentLat,
             @RequestParam Double currentLon,
