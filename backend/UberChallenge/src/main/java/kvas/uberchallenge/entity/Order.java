@@ -45,10 +45,6 @@ public class Order {
     @NotNull
     private LocalDateTime startingTime;
 
-    @Column(name = "city_id", nullable = false)
-    @NotBlank
-    private String cityId;
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

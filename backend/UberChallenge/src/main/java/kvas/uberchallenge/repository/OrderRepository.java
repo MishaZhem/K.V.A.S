@@ -11,9 +11,13 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID> {
-    List<Order> findByCityId(String cityId);
-
-    @Query("SELECT o FROM Order o WHERE o.cityId = :cityId")
-    List<Order> findOrdersByCityId(@Param("cityId") String cityId);
+    @Query(value = "SELECT * FROM orders " +
+            "WHERE acos(sin(:driverLat * pi() / 180) * sin(start_lat * pi() / 180) + " +
+            "           cos(:driverLat * pi() / 180) * cos(start_lat * pi() / 180) * " +
+            "           cos(start_lon * pi() / 180 - :driverLon * pi() / 180)) * 6371 < :radius",
+            nativeQuery = true)
+    List<Order> findNearbyOrders(@Param("driverLat") double driverLat,
+                                 @Param("driverLon") double driverLon,
+                                 @Param("radius") double radius);
 }
 
