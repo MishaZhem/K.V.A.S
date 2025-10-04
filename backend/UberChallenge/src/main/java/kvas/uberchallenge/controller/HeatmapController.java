@@ -17,10 +17,11 @@ public class HeatmapController {
 
     @GetMapping("/heatmap")
     public ResponseEntity<HeatmapResponseDTO> getHeatmap(
-            @RequestParam String time,
+            @RequestParam Integer hour,
             Authentication authentication) {
         String username = authentication.getName();
-        HeatmapResponseDTO response = heatmapService.getHeatmap(username, time);
+        HeatmapResponseDTO response = heatmapService.getHeatmap(username, hour);
+
         return ResponseEntity.ok(response);
     }
 
