@@ -5,7 +5,7 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
+  overflow-y: hidden;
 }
 
 .mapboxgl-ctrl-logo, .mapboxgl-ctrl-bottom-right {
