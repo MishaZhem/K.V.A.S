@@ -30,4 +30,7 @@ public class RegisterRequestDTO {
 
     @NotNull(message = "EV status is required")
     private Boolean isEv;
+
+    @NotNull(message = "Experience months is required")
+    private Integer experienceMonths;
 }

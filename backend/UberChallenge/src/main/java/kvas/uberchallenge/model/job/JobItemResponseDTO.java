@@ -11,11 +11,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobItemResponseDTO {
-    private UUID id;
-    private LocationDTO from;
-    private LocationDTO to;
-    private Integer potentialEarningCents;
-    private Integer earningRateCents;
-    private Long startTimestamp;
+    private Double expectedDistanceFromPickUpToDropOff;
+    private Double expectedDistanceFromDriverToPickUp;
+    private Double expectedDurationFromPickUpToDropOff;
+    private Double expectedDurationFromDriverToPickUp;
+    private Double expectedEarnNet;
+    private Double moneyPerHour;
 }
 

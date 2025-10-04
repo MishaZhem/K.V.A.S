@@ -57,6 +57,7 @@ public class AuthService {
                     .fuelType(EnumMappingHelper.getFuelTypeByName(request.getFuelType()))
                     .vehicleType(EnumMappingHelper.getVehicleTypeByName(request.getVehicleType()))
                     .isEv(request.getIsEv())
+                    .experienceMonths(request.getExperienceMonths())
                     .build();
 
             driver = driverRepository.save(driver);

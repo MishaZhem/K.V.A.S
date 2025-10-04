@@ -43,7 +43,7 @@ public class Order {
 
     @Column(name = "starting_time", nullable = false)
     @NotNull
-    private LocalDateTime startingTime;
+    private Integer startingTime;
 
     @Column(name = "product_type")
     @Enumerated(EnumType.ORDINAL)
@@ -57,13 +57,6 @@ public class Order {
 
     @Column(name = "weather_type")
     @Enumerated(EnumType.ORDINAL)
+    @NotNull
     private WeatherType weatherType;
-
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

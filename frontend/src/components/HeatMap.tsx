@@ -1,115 +1,119 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
+import { points } from '../assets';
+import { ButtonSleep } from "../components";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const MapAnimation = () => {
-  const mapContainer = useRef(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const labelRef = useRef(null);
+    const mapContainer = useRef(null);
+    const map = useRef<mapboxgl.Map | null>(null);
+    const labelRef = useRef(null);
+    const hours = [0, 6, 12, 18, 24];
+    const curHour = 11;
 
-  useEffect(() => {
-    console.log('Map container:', map.current);
-    if (map.current) return;
+    useEffect(() => {
+        console.log('Map container:', map.current);
+        if (map.current) return;
 
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current as unknown as HTMLElement,
-      style: 'mapbox://styles/misha111/cmgcoero500fa01r02s4x2e8d',
-      center: [-74.0059, 40.7128],
-      zoom: 12
-    });
-
-    const m = map.current;
-
-    m.on('load', () => {
-      m.addLayer({
-        id: 'collisions',
-        type: 'circle',
-        source: {
-          type: 'geojson',
-          data: 'https://raw.githubusercontent.com/MishaZhem/jsonTest/refs/heads/main/collisions1601.json'
-        },
-        paint: {
-          'circle-radius': [
-            'interpolate',
-            ['linear'],
-            ['number', ['get', 'Casualty']],
-            0,
-            4,
-            5,
-            24
-          ],
-          'circle-color': [
-            'interpolate',
-            ['linear'],
-            ['number', ['get', 'Casualty']],
-            0,
-            '#2DC4B2',
-            1,
-            '#3BB3C3',
-            2,
-            '#669EC4',
-            3,
-            '#8B88B6',
-            4,
-            '#A2719B',
-            5,
-            '#AA5E79'
-          ],
-          'circle-opacity': 1
-        },
-        filter: ['==', ['number', ['get', 'Hour']], 12]
-      });
-
-      const slider = document.getElementById('slider');
-      if (slider) {
-        slider.addEventListener('input', (event) => {
-          const hour = parseInt((event.target as HTMLInputElement).value);
-          // update the map
-          m.setFilter('collisions', ['==', ['number', ['get', 'Hour']], hour]);
-
-          // converting 0-23 hour to AMPM format
-          const ampm = hour >= 12 ? 'PM' : 'AM';
-          const hour12 = hour % 12 ? hour % 12 : 12;
-
-          // update text in the UI
-          const activeHour = document.getElementById('active-hour');
-          if (activeHour) {
-            activeHour.innerText = hour12 + ampm;
-          }
+        map.current = new mapboxgl.Map({
+            container: mapContainer.current as unknown as HTMLElement,
+            style: 'mapbox://styles/misha111/cmgcoero500fa01r02s4x2e8d',
+            center: [-74.0059, 40.7128],
+            zoom: 12
         });
-      }
 
-      // m.addLayer({
-      //         id: 'collisions-hexagons',
-      //         type: 'fill',
-      //         source: {
-      //             type: 'geojson',
-      //             data: 'https://raw.githubusercontent.com/MishaZhem/jsonTest/refs/heads/main/collisions_hexagons.json'
-      //         },
-      //         paint: {
-      //             'fill-color': '#ff0000', // Яркий красный для теста
-      //             'fill-opacity': 0.8,
-      //             'fill-outline-color': '#000000' // Чёрная обводка
-      //         }
-      //     });
+        const m = map.current;
 
-      //     // Отладочные логи
-      //     console.log('Source:', m.getSource('collisions-hexagons'));
-      //     console.log('Layer:', m.getLayer('collisions-hexagons'));
+        m.on('load', () => {
+            m.addLayer({
+                id: 'collisions',
+                type: 'circle',
+                source: {
+                    type: 'geojson',
+                    data: 'https://raw.githubusercontent.com/MishaZhem/jsonTest/refs/heads/main/collisions1601.json'
+                },
+                paint: {
+                    'circle-radius': [
+                        'interpolate',
+                        ['linear'],
+                        ['number', ['get', 'Casualty']],
+                        0,
+                        4,
+                        5,
+                        24
+                    ],
+                    'circle-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['number', ['get', 'Casualty']],
+                        0,
+                        '#2DC4B2',
+                        1,
+                        '#3BB3C3',
+                        2,
+                        '#669EC4',
+                        3,
+                        '#8B88B6',
+                        4,
+                        '#A2719B',
+                        5,
+                        '#AA5E79'
+                    ],
+                    'circle-opacity': 1
+                },
+                filter: ['==', ['number', ['get', 'Hour']], 12]
+            });
 
-      //     // Проверка ошибок загрузки источника
-      //     m.on('error', (e) => console.error('Map error:', e.error));
+            const slider = document.getElementById('slider');
+            if (slider) {
+                slider.addEventListener('input', (event) => {
+                    const hour = parseInt((event.target as HTMLInputElement).value);
+                    // update the map
+                    m.setFilter('collisions', ['==', ['number', ['get', 'Hour']], hour]);
 
-    });
+                    // converting 0-23 hour to AMPM format
+                    const ampm = hour >= 12 ? 'PM' : 'AM';
+                    const hour12 = hour % 12 ? hour % 12 : 12;
+
+                    // update text in the UI
+                    const activeHour = document.getElementById('active-hour');
+                    if (activeHour) {
+                        activeHour.innerText = hour12 + ampm;
+                    }
+                });
+            }
+
+            // m.addLayer({
+            //         id: 'collisions-hexagons',
+            //         type: 'fill',
+            //         source: {
+            //             type: 'geojson',
+            //             data: 'https://raw.githubusercontent.com/MishaZhem/jsonTest/refs/heads/main/collisions_hexagons.json'
+            //         },
+            //         paint: {
+            //             'fill-color': '#ff0000', // Яркий красный для теста
+            //             'fill-opacity': 0.8,
+            //             'fill-outline-color': '#000000' // Чёрная обводка
+            //         }
+            //     });
+
+            //     // Отладочные логи
+            //     console.log('Source:', m.getSource('collisions-hexagons'));
+            //     console.log('Layer:', m.getLayer('collisions-hexagons'));
+
+            //     // Проверка ошибок загрузки источника
+            //     m.on('error', (e) => console.error('Map error:', e.error));
+
+        });
 
 
-  }, []);
+    }, []);
 
-  return (
-    <div className="map-container">
-      <div ref={mapContainer} className="map" />
-      {/* <div ref={labelRef} className="country-label">
+    return (
+        <div className="map-container">
+            <div ref={mapContainer} className="map" />
+            {/* <div ref={labelRef} className="country-label">
                 <input
                     id="slider"
                     className="slider opacity-30 bg-[#D9D9D9]"
@@ -119,16 +123,28 @@ const MapAnimation = () => {
                     step="1"
                 />
             </div> */}
-      <div className="absolute right-0 left-0 bottom-0 h-[100px] w-full backdrop-blur-md" style={{ maskImage: 'linear-gradient(to top, black, transparent)' }}>
-        <div className="flex justify-between items-center absolute left-6 right-6 bottom-4">
-          {Array(20).fill(1).map((_, index) => (
-            <div key={index} className="column bg-[#D9D9D9] opacity-20 w-[6px] h-[13px]"></div>
-          ))}
-        </div>
-      </div>
+            <div className="absolute right-0 left-0 bottom-0 h-[240px] w-full backdrop-blur-md" style={{ maskImage: 'linear-gradient(to top, black, transparent)' }}>
+                <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4'>
+                    <div className='graph '>
+                        <div>
+                            <ButtonSleep></ButtonSleep>
 
-    </div>
-  );
+                        </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        {Array(24).fill(1).map((_, index) => (
+                            <div className={`flex flex-col items-center w-[18px] ${index % 6 != 0 ? 'mt-[4px] mb-auto' : ''}`}>
+                                <div key={index} className={`column bg-[#D9D9D9] w-[6px] ${index % 6 == 0 ? "h-[20px]" : "h-[12px]"} ${curHour == index ? 'opacity-100 bg-[#FFFFFF]' : "opacity-20"}`}></div>
+                                {index % 6 == 0 && (<h1 className={`w-[18px] flex items-center justify-center Jet ${curHour == index ? '' : "opacity-50"}`}>{index}</h1>)}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <img src={points} alt="" className="opacity-30" />
+            </div>
+
+        </div>
+    );
 };
 
 export default MapAnimation;
