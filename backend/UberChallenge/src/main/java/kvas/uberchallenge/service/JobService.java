@@ -34,18 +34,8 @@ public class JobService {
             List<Order> orders = orderRepository.findNearbyOrders(
                     currentLat, currentLon, MAX_RADIUS_KM, driver.getEarnerType().getValue());
 
-            // Execute Python script
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    ".venv/bin/python", pythonScript, inputCsv, outputCsv
-            );
-            processBuilder.redirectErrorStream(true);
-            Process process = processBuilder.start();
-
-            // Read output
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+            if (orders.isEmpty()) {
+                return new JobListResponseDTO(new ArrayList<>());
             }
 
             String inputCsv = buildInputCsv(currentLat, currentLon, driver, orders);
