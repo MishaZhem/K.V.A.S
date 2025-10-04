@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: uber-postgres
+    environment:
+      POSTGRES_DB: "uber_challenge"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "123456"
+    ports:
+      - "5430:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d uber_challenge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
