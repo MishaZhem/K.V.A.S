@@ -14,6 +14,7 @@ const DriverLoginWidget = ({updateUserContext}: {updateUserContext: (newUserCont
                 username: "Admin",
                 loginToken: "0",
                 at: {lat: 0.0, lon: 0.0},
+                isCourier: false,
                 jobsThisWeek: 10,
             }); return;}
             // POST /api/driver/login

@@ -20,7 +20,6 @@ const JobItemDisplay = ({job}: {job: JobItem}) => {
             flex-col
             space-y-2
 ">
-                <p>City: {job.city}</p>
                 <p>From {job.from.lat},{job.from.lon}</p>
                 <p>To {job.to.lat},{job.to.lon}.</p>
                 <p>Expected earning is ${job.potentialEarningCents / 100}</p>

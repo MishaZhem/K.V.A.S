@@ -2,7 +2,8 @@ type UserContext = {
     username: string,
     loginToken: string,
     at: Loc,
-    jobsThisWeek: number,
+    isCourier: boolean,
+    jobsThisWeek: number, // this can be always zero until we start talking about bonuses.
 }
 type Loc = {
     lat: number,

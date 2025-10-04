@@ -2,10 +2,10 @@ import type { Loc } from "./userContext"
 
 type JobItem = {
     id: string,
-    from: Loc,
+    from: Loc, // Loc = {lat: number; lon: number}
     to: Loc,
-    city: string,
     potentialEarningCents: number,
-    startTimestamp: string,
+    earningRateCents: number,
+    startTimestamp: number,
 }
 export { type JobItem };
