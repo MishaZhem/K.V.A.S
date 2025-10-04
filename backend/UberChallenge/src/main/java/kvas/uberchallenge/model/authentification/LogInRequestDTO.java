@@ -1,4 +1,4 @@
-package kvas.uberchallenge.model;
+package kvas.uberchallenge.model.authentification;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

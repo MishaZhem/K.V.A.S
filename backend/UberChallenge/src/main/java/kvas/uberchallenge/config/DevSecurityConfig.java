@@ -3,6 +3,7 @@ package kvas.uberchallenge.config;
 import kvas.uberchallenge.exception.CustomAccessDeniedHandler;
 import kvas.uberchallenge.exception.CustomBasicAuthenticationEntryPoint;
 import kvas.uberchallenge.security.JWTTokenValidatorFilter;
+import kvas.uberchallenge.security.UsernamePasswordAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +38,6 @@ public class DevSecurityConfig {
     @Bean
     @Order
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
@@ -55,7 +55,7 @@ public class DevSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        com.cmasproject.cmastestserver.security.UsernamePasswordAuthenticationProvider authenticationProvider = new com.cmasproject.cmastestserver.security.UsernamePasswordAuthenticationProvider(userDetailsService, passwordEncoder);
+        UsernamePasswordAuthenticationProvider authenticationProvider = new UsernamePasswordAuthenticationProvider(userDetailsService, passwordEncoder);
 
         ProviderManager providerManager = new ProviderManager(authenticationProvider);
         providerManager.setEraseCredentialsAfterAuthentication(false);

@@ -45,10 +45,6 @@ public class Driver {
     @NotBlank
     private String fuelType;
 
-    @Column(name = "home_city")
-    @NotBlank
-    private String homeCity;
-
     @Column(name = "vehicle_type")
     @NotBlank
     private String vehicleType;

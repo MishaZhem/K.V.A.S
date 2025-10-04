@@ -7,7 +7,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kvas.uberchallenge.constant.ApplicationConstants;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,49 +28,42 @@ import java.util.UUID;
 
 @Component
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
-
-    @Value("${jwt.secret:mySecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLong12345678}")
-    private String jwtSecret;
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        String jwt = request.getHeader("Authorization");
-
-        if (jwt != null && jwt.startsWith("Bearer ")) {
-            jwt = jwt.substring(7);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
+    {
+        String jwt = request.getHeader(ApplicationConstants.JWT_HEADER);
+        if(jwt != null) {
             try {
-                SecretKey secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-                Claims claims = Jwts.parser()
-                        .verifyWith(secretKey)
-                        .build()
-                        .parseSignedClaims(jwt)
-                        .getPayload();
+                Environment env = getEnvironment();
 
-                String username = claims.getSubject();
-                String driverIdStr = claims.get("driverId", String.class);
-                UUID driverId = UUID.fromString(driverIdStr);
+                if (env != null) {
+                    String secret = env.getProperty(ApplicationConstants.JWT_SECRET_KEY,
+                            ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
 
-                Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        username,
-                        null,
-                        AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER")
-                );
+                    SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
-                // Set driverId as details for easy access in controllers
-                ((UsernamePasswordAuthenticationToken) authentication).setDetails(driverId);
+                    if(secretKey != null) {
+                        Claims claims = Jwts.parser().verifyWith(secretKey)
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                                .build().parseSignedClaims(jwt).getPayload();
+                        String username = String.valueOf(claims.get("username"));
+                        String authorities = String.valueOf(claims.get("authorities"));
+                        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null,
+                                AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                }
             } catch (Exception exception) {
                 handleJwtException(response, "Invalid or expired JWT token.", exception);
                 return;
             }
         }
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request,response);
     }
 
-    private void handleJwtException(HttpServletResponse response, String message, Throwable exception) throws IOException {
+    private void handleJwtException(HttpServletResponse response, String message, Throwable exception) throws IOException
+    {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -89,8 +84,8 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
-        return path.equals("/api/auth/login") || path.equals("/api/auth/register");
+    protected boolean shouldNotFilter(HttpServletRequest request)
+    {
+        return request.getServletPath().equals("/api/auth/login") || request.getServletPath().equals("/api/auth/signup");
     }
 }

@@ -42,7 +42,6 @@ public class DriverService {
         mlRequest.put("rating", driver.getRating());
         mlRequest.put("earnerType", driver.getEarnerType());
         mlRequest.put("fuelType", driver.getFuelType());
-        mlRequest.put("homeCity", driver.getHomeCity());
         mlRequest.put("vehicleType", driver.getVehicleType());
         mlRequest.put("currentLat", currentLat);
         mlRequest.put("currentLon", currentLon);
@@ -70,7 +69,6 @@ public class DriverService {
         mlRequest.put("rating", driver.getRating());
         mlRequest.put("earnerType", driver.getEarnerType());
         mlRequest.put("fuelType", driver.getFuelType());
-        mlRequest.put("homeCity", driver.getHomeCity());
         mlRequest.put("vehicleType", driver.getVehicleType());
         mlRequest.put("time", time);
 
@@ -95,8 +93,7 @@ public class DriverService {
 
     public JobListResponseDTO getJobs(UUID driverId, Double currentLat, Double currentLon) {
         Driver driver = getDriverById(driverId);
-        List<Order> orders = orderRepository.findByCityId(driver.getHomeCity());
-
+        List<Order> orders = orderRepository.findAll();
         List<JobItemDTO> jobs = orders.stream()
                 .filter(order -> calculateDistance(currentLat, currentLon, order.getStartLat(), order.getStartLon()) <= MAX_RADIUS_KM)
                 .map(order -> {
@@ -130,7 +127,6 @@ public class DriverService {
         mlRequest.put("rating", driver.getRating());
         mlRequest.put("earnerType", driver.getEarnerType());
         mlRequest.put("fuelType", driver.getFuelType());
-        mlRequest.put("homeCity", driver.getHomeCity());
         mlRequest.put("vehicleType", driver.getVehicleType());
         mlRequest.put("currentDriverLoc", Map.of("lat", currentDriverLoc.getLat(), "lon", currentDriverLoc.getLon()));
         mlRequest.put("pickupLoc", Map.of("lat", pickupLoc.getLat(), "lon", pickupLoc.getLon()));

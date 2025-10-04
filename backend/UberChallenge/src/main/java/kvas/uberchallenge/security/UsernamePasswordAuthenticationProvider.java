@@ -1,4 +1,4 @@
-package com.cmasproject.cmastestserver.security;
+package kvas.uberchallenge.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;

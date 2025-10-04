@@ -1,17 +1,25 @@
 package kvas.uberchallenge.service;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import kvas.uberchallenge.constant.ApplicationConstants;
+import kvas.uberchallenge.entitiy.enums.Role;
 import kvas.uberchallenge.entity.Driver;
 import kvas.uberchallenge.entity.User;
-import kvas.uberchallenge.model.JwtResponseDTO;
-import kvas.uberchallenge.model.LogInRequestDTO;
-import kvas.uberchallenge.model.RegisterRequestDTO;
+import kvas.uberchallenge.exception.UserAlreadyExistsException;
+import kvas.uberchallenge.helper.TimeTranslator;
+import kvas.uberchallenge.model.authentification.LogInRequestDTO;
+import kvas.uberchallenge.model.authentification.RegisterRequestDTO;
+import kvas.uberchallenge.model.authentification.RegisterResponseDTO;
 import kvas.uberchallenge.repository.DriverRepository;
 import kvas.uberchallenge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,64 +35,54 @@ public class AuthService {
     private final UserRepository userRepository;
     private final DriverRepository driverRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationConstants applicationConstants;
+    private final PasswordEncoder encoder;
+    private final AuthenticationManager authenticationManager;
+    private final Environment env;
 
-    @Value("${jwt.secret:mySecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLong12345678}")
-    private String jwtSecret;
+    public RegisterResponseDTO register(RegisterRequestDTO request) {
+        try {
+            User user = User.builder()
+                    .username(request.getUsername())
+                    .passwordHash(passwordEncoder.encode(request.getPassword()))
+                    .role(Role.DRIVER) //TODO: different for driver and customer
+                    .build();
+            user = userRepository.save(user);
 
-    @Value("${jwt.expiration:86400000}")
-    private Long jwtExpiration;
+            Driver driver = Driver.builder()
+                    .user(user)
+                    .rating(0.0)
+                    .earnerType(request.getEarnerType())
+                    .fuelType(request.getFuelType())
+                    .vehicleType(request.getVehicleType())
+                    .build();
+            driver = driverRepository.save(driver);
 
-    @Transactional
-    public JwtResponseDTO register(RegisterRequestDTO request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            return RegisterResponseDTO.builder()
+                    .build();
+        } catch (DataIntegrityViolationException e) {
+            throw new UserAlreadyExistsException("User with username '" + request.getUsername() + "' already exists");
         }
-
-        User user = User.builder()
-                .username(request.getUsername())
-                .passwordHash(passwordEncoder.encode(request.getPassword()))
-                .build();
-        user = userRepository.save(user);
-
-        Driver driver = Driver.builder()
-                .user(user)
-                .rating(request.getRating())
-                .earnerType(request.getEarnerType())
-                .fuelType(request.getFuelType())
-                .homeCity(request.getHomeCity())
-                .vehicleType(request.getVehicleType())
-                .build();
-        driver = driverRepository.save(driver);
-
-        String token = generateToken(user.getId(), driver.getId());
-        return new JwtResponseDTO(token, driver.getId());
     }
 
-    public JwtResponseDTO login(LogInRequestDTO request) {
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        Driver driver = driverRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Driver profile not found"));
-
-        String token = generateToken(user.getId(), driver.getId());
-        return new JwtResponseDTO(token, driver.getId());
+    public Authentication authenticateUser(LogInRequestDTO request)
+    {
+        Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(request.getUsername(), request.getPassword());
+        return authenticationManager.authenticate(authentication);
     }
 
-    private String generateToken(java.util.UUID userId, java.util.UUID driverId) {
-        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    public String generateJWTToken(Authentication authentication)
+    {
+        String secret = env.getProperty(ApplicationConstants.JWT_SECRET_KEY, ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        int expirationTimeHours = Integer.parseInt(env.getProperty(ApplicationConstants.JWT_EXPIRATION_KEY, String.valueOf(ApplicationConstants.JWT_EXPIRATION_TIME_HOURS)));
 
-        return Jwts.builder()
-                .setSubject(userId.toString())
-                .claim("driverId", driverId.toString())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        return Jwts.builder().issuer("CMAS TEST SERVER").subject("JWT Token")
+                .claim("username", authentication.getName())
+                .claim("authorities", authentication.getAuthorities().stream().map(
+                        GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
+                .issuedAt(new Date())
+                .expiration(new Date((new Date()).getTime() + TimeTranslator.hoursToMilliseconds(expirationTimeHours)))
+                .signWith(secretKey).compact();
     }
 }
-

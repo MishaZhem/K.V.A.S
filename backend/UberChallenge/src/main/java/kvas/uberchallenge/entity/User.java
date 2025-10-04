@@ -1,13 +1,13 @@
 package kvas.uberchallenge.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import kvas.uberchallenge.entitiy.enums.Role;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,9 +21,9 @@ import java.util.UUID;
 @Builder
 public class User {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", updatable = false, nullable = false)
+    @UuidGenerator
+    @Column(name="doctor_id", length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
     @Column(name = "username", unique = true, nullable = false)
