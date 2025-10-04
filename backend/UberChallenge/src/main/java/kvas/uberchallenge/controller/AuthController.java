@@ -6,6 +6,7 @@ import kvas.uberchallenge.model.authentification.LogInRequestDTO;
 import kvas.uberchallenge.model.authentification.RegisterRequestDTO;
 import kvas.uberchallenge.model.authentification.RegisterResponseDTO;
 import kvas.uberchallenge.service.AuthService;
+import kvas.uberchallenge.service.DriverInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final DriverInfoService driverInfoService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LogInRequestDTO request) {
@@ -31,7 +33,7 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header(ApplicationConstants.JWT_HEADER, jwt)
-                .build();
+                .body(driverInfoService.getDriverByName(request.getUsername()));
     }
 
     @PostMapping("/register")

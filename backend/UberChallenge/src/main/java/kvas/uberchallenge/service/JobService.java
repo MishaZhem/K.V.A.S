@@ -40,7 +40,7 @@ public class JobService {
 
             // Execute Python script
             ProcessBuilder processBuilder = new ProcessBuilder(
-                    "python", pythonScript, inputCsv, outputCsv
+                    ".venv/bin/python", pythonScript, inputCsv, outputCsv
             );
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();

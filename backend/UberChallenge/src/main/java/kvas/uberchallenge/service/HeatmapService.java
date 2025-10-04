@@ -16,8 +16,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import com.opencsv.CSVWriter;
 
-import java.io.IOException;
-
 @Service
 @RequiredArgsConstructor
 public class HeatmapService {
@@ -43,7 +41,7 @@ public class HeatmapService {
 
             // Execute Python script
             ProcessBuilder processBuilder = new ProcessBuilder(
-                    "python", pythonScript, inputCsv, outputCsv
+                    ".venv/bin/python", pythonScript, inputCsv, outputCsv
             );
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
