@@ -1,11 +1,11 @@
 const endpoints = {
-    login: "/api/driver/login", // POST
+    login: "http://localhost:8082/api/driver/login", // POST
     jobs: {
         // POST get all jobs within 2kms from the user.
-        view: "/api/jobs/view?r=2km", // POST
+        view: "http://localhost:8082/api/jobs/view?r=2km", // POST
 
         // GET the next recommended job (highest rating)
-        take: "/api/jobs/take", // GET
+        take: "http://localhost:8082/api/jobs/take", // GET
     },
 };
 
