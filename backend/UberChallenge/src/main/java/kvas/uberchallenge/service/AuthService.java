@@ -13,6 +13,7 @@ import kvas.uberchallenge.exception.UserAlreadyExistsException;
 import kvas.uberchallenge.helper.EnumMappingHelper;
 import kvas.uberchallenge.helper.TimeTranslator;
 import kvas.uberchallenge.model.authentification.LogInRequestDTO;
+import kvas.uberchallenge.model.authentification.LogInResponseDTO;
 import kvas.uberchallenge.model.authentification.RegisterRequestDTO;
 import kvas.uberchallenge.model.authentification.RegisterResponseDTO;
 import kvas.uberchallenge.repository.DriverRepository;
@@ -20,6 +21,7 @@ import kvas.uberchallenge.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -74,6 +76,23 @@ public class AuthService {
         } catch (DataIntegrityViolationException e) {
             throw new UserAlreadyExistsException("User with username '" + request.getUsername() + "' already exists");
         }
+    }
+    public Pair<String, LogInResponseDTO> login(LogInRequestDTO request) {
+        Authentication authentication = authenticateUser(request);
+        String jwt = generateJWTToken(authentication);
+        Driver driverInfo = driverRepository.getDriverByUser_Username(request.getUsername()).get();
+
+        LogInResponseDTO responseBody = LogInResponseDTO.builder()
+                .username(driverInfo.getUser().getUsername())
+                .rating(driverInfo.getRating())
+                .earnerType(driverInfo.getEarnerType().name())
+                .experienceMonths(driverInfo.getExperienceMonths())
+                .fuelType(driverInfo.getFuelType().name())
+                .isEv(driverInfo.getIsEv())
+                .vehicleType(driverInfo.getVehicleType().name())
+                .build();
+
+        return Pair.of(jwt, responseBody);
     }
 
     public Authentication authenticateUser(LogInRequestDTO request)

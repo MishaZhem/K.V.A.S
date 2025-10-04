@@ -1,3 +1,4 @@
+@config "../tailwind.config.ts";
 @import "tailwindcss";
 
 :root {
@@ -54,8 +55,8 @@ body {
 }
 
 .slider {
-  width: 200px; 
-  height: 20px; 
+  /* background-color: transparent; */
+  opacity: 0;
 }
 
 .centerAbsoluteX {
@@ -75,3 +76,22 @@ body {
   transform: translateX(-50%);
   opacity: 1; 
 }
+
+.backLinesOrange {
+  position: absolute;
+  inset: 0rem;
+  background: linear-gradient(45deg, rgba(249, 115, 22, 0.3) 25%, transparent 25%, transparent 50%, rgba(249, 115, 22, 0.3) 50%, rgba(249, 115, 22, 0.3) 75%, transparent 75%, transparent);
+  background-size: 40px 40px; 
+  width: 95%;
+  left: 50%;
+  right: 50%;
+  transform: translateX(-50%);
+  opacity: 1; 
+}
+
+.sliderTime {
+  background: rgba(217, 217, 217, 0.30);
+  height: 25px;
+  margin-top: auto;
+}
+
