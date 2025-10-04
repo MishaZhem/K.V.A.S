@@ -1,25 +1,26 @@
+
 import { useState } from "react";
-import type { DriverInfo, UserContextType } from "../types/userContext";
+import type { UserContextType } from "../types/userContext";
 import endpoints from "../data/endpoints";
 import InteractiveBackground from "./InteractiveBackground";
 
 const DriverRegisterWidget = ({ updateUserContext }: { updateUserContext: (newUserContext: UserContextType) => void }) => {
-    const [loginResponseLine, setLoginResponseLine] = useState("");
+  const [loginResponseLine, setLoginResponseLine] = useState("");
   return (
     <div className="bg-[#0B0B0B] h-screen text-white flex flex-col min-h-screen justify-center items-center font-sans p-4">
       <InteractiveBackground /> {/* <--- NEW COMPONENT */}
-      <div className="z-10 group relative w-full max-w-sm rounded-lg border border-white/10 p-8 bg-[#0B0B0B]">
+      <div className="z-10 group relative w-full max-w-sm rounded-lg border border-white/10 bg-[#0B0B0B]">
         <div className="pointer-events-none absolute inset-0 z-10 rounded-lg bg-gradient-to-b from-white/[.07] to-transparent opacity-0 transition-opacity duration-100 group-hover:opacity-100"></div>
 
         <div className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-100 group-hover:opacity-100">
           <div className="absolute inset-0 border border-white/20 rounded-lg"></div>
-          <div className="bg-white absolute -left-px -top-px z-10 size-2"></div>
-          <div className="bg-white absolute -right-px -top-px z-10 size-2"></div>
-          <div className="bg-white absolute -bottom-px -left-px z-10 size-2"></div>
-          <div className="bg-white absolute -bottom-px -right-px z-10 size-2"></div>
+          <div className="bg-white_primary absolute -left-px -top-px z-10 size-2"></div>
+          <div className="bg-white_primary absolute -right-px -top-px z-10 size-2"></div>
+          <div className="bg-white_primary absolute -bottom-px -left-px z-10 size-2"></div>
+          <div className="bg-white_primary absolute -bottom-px -right-px z-10 size-2"></div>
         </div>
 
-        <div className="relative z-30">
+        <div className="relative z-30 p-8 max-h-[70vh] overflow-y-auto scrollbar-hide">
           <h2 className="text-2xl font-bold mb-6 text-center text-white/90 tracking-wider">
             Sign up
           </h2>
@@ -32,18 +33,7 @@ const DriverRegisterWidget = ({ updateUserContext }: { updateUserContext: (newUs
             const vehicleTypeInput = (document.getElementById('driverVehicleType') as HTMLInputElement).value;
             const fuelTypeInput = (document.getElementById('driverFuelType') as HTMLInputElement).value;
             const experienceMonthsInput = (document.getElementById('driverExperienceMonths') as HTMLInputElement).value;
-            
-            // if (usernameInput === "admin" && passwordInput === "admin") {
-            //   setLoginResponseLine("adminlogin");
-            //   updateUserContext({
-            //     username: "admin",
-            //     loginToken: "0",
-            //     at: { lat: 0.0, lon: 0.0 },
-            //     isCourier: false,
-            //     jobsThisWeek: 10,
-            //   });
-            //   return;
-            // }
+
             if (passwordConfirmInput !== passwordInput) {
               setLoginResponseLine("ERROR Inconsistent password!")
               return;
@@ -57,21 +47,18 @@ const DriverRegisterWidget = ({ updateUserContext }: { updateUserContext: (newUs
               isEv: fuelTypeInput === "EV",
               experienceMonths: Number.parseInt(experienceMonthsInput),
             };
-            // POST /api/driver/login
             const response = await fetch(endpoints.signup, {
-                mode: "cors",
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(newRegisterRequest)
+              mode: "cors",
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(newRegisterRequest)
             });
             if (!(response.ok)) {
-                setLoginResponseLine("Bad!");
+              setLoginResponseLine("Bad!");
             } else {
               alert(await response.json())
-                // alert(authToken);
-                // updateUserContext(await response.json() as UserContextType);
             }
           }}>
             {loginResponseLine && <p id="errorline" className="text-red-500 text-center text-sm">{loginResponseLine}</p>}
@@ -88,23 +75,16 @@ const DriverRegisterWidget = ({ updateUserContext }: { updateUserContext: (newUs
               <label htmlFor="driverPasswordConfirm" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Confirm your password</label>
               <input type="password" id="driverPasswordConfirm" name="driverPasswordConfirm" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
             </div>
-            
-            {/* TODO make this into a dropdown; Courier / Driver */}
+
             <div>
               <label htmlFor="driverEarnerType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">What type of earner are you?</label>
               <input id="driverEarnerType" name="driverEarnerType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
             </div>
 
-            {/* vehicle type 
-              * TODO make it into dropdown: car / scooter / bike
-            */}
             <div>
               <label htmlFor="driverVehicleType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Your vehicle type</label>
               <input id="driverVehicleType" name="driverVehicleType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
             </div>
-            {/* vehicle type 
-              * TODO make it into dropdown: hybrid / EV / gas
-            */}
             <div>
               <label htmlFor="driverFuelType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Your fuel type</label>
               <input id="driverFuelType" name="driverFuelType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
