@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 
 @Component
 public class PythonDependencyInstaller implements CommandLineRunner {
+    String pythonExecutable = System.getProperty("python.executable.path", "python");
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -28,8 +30,7 @@ public class PythonDependencyInstaller implements CommandLineRunner {
 
         System.out.println("Installing python dependencies from requirments.txt...");
 
-        ProcessBuilder processBuilder = new ProcessBuilder("../../../../.venv/bin/python", "-m", "pip", "install", "-r", "requirments.txt");
-        processBuilder.directory(pythonDir);
+        ProcessBuilder processBuilder = new ProcessBuilder(pythonExecutable, "-m", "pip", "install", "-r", "requirments.txt");        processBuilder.directory(pythonDir);
         processBuilder.redirectErrorStream(true);
 
         Process process = processBuilder.start();
