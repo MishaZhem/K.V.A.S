@@ -64,7 +64,7 @@ const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: User
               const driverInfo = await response.json() as DriverInfo;
               setLoginResponseLine("good!");
               updateUserContext({
-                username: driverInfo.user.username,
+                username: driverInfo.username,
                 loginToken: authToken,
                 at: { lat: 0., lon: 0. },
                 isCourier: driverInfo.earnerType === "COURIER",
