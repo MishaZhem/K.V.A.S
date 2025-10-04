@@ -13,15 +13,23 @@ const Map = ({user}: {user: UserContextType | undefined}) => {
     const [jobsShown, setJobsShown] =  useState(false);
     const [profileShown, setProfileShown] =  useState(false);    
     useEffect(() => {
-        if (user && user.username === "admin") {
-            setJobs(jobs_test);
-            return;
-        }
+        // if (user && user.username === "admin") {
+        //     setJobs(jobs_test);
+        //     return;
+        // }
         if (user) {
+            if (window.localStorage.getItem('uberapp-jwt') === null) { return; }
+            const token = window.localStorage.getItem('uberapp-jwt') as string;
             fetch(endpoints.jobs.view, {
                 method: "GET",
                 mode: "cors",
-            }).then((v) => v.json()).then((v) => setJobs(v as JobItem[]))
+                headers: {
+                    "Authorization": token,
+                }
+            }).then((v) => v.json()).then((v) => {
+                if ( v.jobs === null ) { setJobs([]); return; }
+                setJobs(v.jobs as JobItem[]);
+            })
         }
     }, [user])
     if (user) {

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import endpoints from "../data/endpoints";
 import getSHA256Hash from "../data/utils";
-import type { UserContextType } from "../types/userContext";
+import type { DriverInfo, UserContextType } from "../types/userContext";
 
 const DriverLoginWidget = ({updateUserContext}: {updateUserContext: (newUserContext: UserContextType) => void}) => {
     const [loginResponseLine, setLoginResponseLine] = useState("");
-    return <div className="driver-login bg-black h-screen text-white flex flex-row min-h-screen justify-center items-center">
+    return <div className="driver-login text-2xl bg-black h-screen text-white flex flex-row min-h-screen justify-center items-center">
             <form className="" onSubmit={async (ev) => {
             ev.preventDefault();
             const usernameInput = (document.getElementById('driverUsername') as HTMLInputElement).value;
@@ -25,16 +25,31 @@ const DriverLoginWidget = ({updateUserContext}: {updateUserContext: (newUserCont
             const response = await fetch(endpoints.login, {
                 mode: "cors",
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({
                     username: usernameInput,
-                    pwhash: getSHA256Hash(passwordInput),
+                    password: passwordInput,
                 })
             });
-            if (!(response.ok)) {
+            if (!((response.ok) && (response.headers.has("Authorization")))) {
                 setLoginResponseLine("Bad!");
             } else {
-                setLoginResponseLine("good!");
-                updateUserContext(await response.json() as UserContextType);
+                
+                const authToken = response.headers.get("Authorization") as string;
+                window.localStorage.setItem("uberapp-jwt", authToken);
+                // alert(authToken);
+                const driverInfo = await response.json() as DriverInfo;
+                    setLoginResponseLine("good!");
+                    updateUserContext({
+                        username: driverInfo.user.username,
+                        loginToken: authToken,
+                        at: {lat: 0., lon: 0.},
+                        isCourier: driverInfo.earnerType === "COURIER",
+                        jobsThisWeek: 0, // change later
+                    })
+                // updateUserContext(await response.json() as UserContextType);
             }
         }}>
             <p id="errorline">{loginResponseLine}</p><br />

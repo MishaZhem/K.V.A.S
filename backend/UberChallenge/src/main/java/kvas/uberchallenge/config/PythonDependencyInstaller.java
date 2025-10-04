@@ -28,7 +28,7 @@ public class PythonDependencyInstaller implements CommandLineRunner {
 
         System.out.println("Installing python dependencies from requirments.txt...");
 
-        ProcessBuilder processBuilder = new ProcessBuilder("python", "-m", "pip", "install", "-r", "requirments.txt");
+        ProcessBuilder processBuilder = new ProcessBuilder("../../../../.venv/bin/python", "-m", "pip", "install", "-r", "requirments.txt");
         processBuilder.directory(pythonDir);
         processBuilder.redirectErrorStream(true);
 
