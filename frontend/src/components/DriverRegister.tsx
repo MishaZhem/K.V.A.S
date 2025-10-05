@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import type { UserContextType } from "../types/userContext";
+import type { DriverInfo, UserContextType } from "../types/userContext";
 import endpoints from "../data/endpoints";
 import InteractiveBackground from "./InteractiveBackground";
 
@@ -59,8 +59,35 @@ const DriverRegisterWidget = ({ updateUserContext }: { updateUserContext: (newUs
               if (!(response.ok)) {
                 setLoginResponseLine("Bad!");
               } else {
-                alert(await response.json())
-              }
+              const responseLogin = await fetch(endpoints.login, {
+              mode: "cors",
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                username: usernameInput,
+                password: passwordInput,
+              })
+            });
+            if (!((responseLogin.ok) && (responseLogin.headers.has("Authorization")))) {
+              setLoginResponseLine("Bad!");
+            } else {
+              const authToken = responseLogin.headers.get("Authorization") as string;
+              window.localStorage.setItem("uberapp-jwt", authToken);
+              // alert(authToken);
+              const driverInfo = await responseLogin.json() as DriverInfo;
+              setLoginResponseLine("good!");
+              updateUserContext({
+                username: driverInfo.username,
+                loginToken: authToken,
+                at: { lat: 0., lon: 0. },
+                isCourier: driverInfo.earnerType === "COURIER",
+                jobsThisWeek: 0, // change later
+              })
+              // updateUserContext(await response.json() as UserContextType);
+            }
+          }
             }}>
               {loginResponseLine && <p id="errorline" className="text-red-500 text-center text-sm">{loginResponseLine}</p>}
               <div>
