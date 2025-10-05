@@ -124,7 +124,7 @@ const MapAnimation = ({ username, userToken }: { username: string, userToken: st
 
         map.current = new mapboxgl.Map({
             container: mapContainer.current as unknown as HTMLElement,
-            style: 'mapbox://styles/misha111/cmgcoero500fa01r02s4x2e8d',
+            style: 'mapbox://styles/misha111/cmgccqs5000d601sabvn4hnli',
             center: [4.895168, 52.370216],
             zoom: 12
         });
