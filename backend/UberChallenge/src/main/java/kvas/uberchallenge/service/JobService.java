@@ -99,7 +99,8 @@ public class JobService {
 
         // Build the docker exec command
         ProcessBuilder processBuilder = new ProcessBuilder(
-               "python", PYTHON_SCRIPT_PATH
+                "docker", "exec", "-i", PYTHON_CONTAINER_NAME,
+                "python", PYTHON_SCRIPT_PATH
         );
         processBuilder.redirectErrorStream(false);
 
