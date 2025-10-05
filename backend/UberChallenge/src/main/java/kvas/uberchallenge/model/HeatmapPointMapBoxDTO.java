@@ -41,7 +41,7 @@ public class HeatmapPointMapBoxDTO {
         this.features = new HeatmapFeature[raw.getPoints().size()];
         for (int i = 0; i < this.features.length; i++) {
             HeatmapPointDTO p = raw.getPoints().get(i);
-            Double[] thingy = {p.getX(), p.getY()};
+            Double[] thingy = {p.getY(), p.getX()};
             HeatmapFeatureGeometry geo = new HeatmapFeatureGeometry(thingy);
             HeatmapFeatureProperties prop = new HeatmapFeatureProperties(p.getValue());
             HeatmapFeature f = new HeatmapFeature(prop, geo);
