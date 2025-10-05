@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 class HeatmapFeatureProperties {
     private Double sumProfit;
-    public HeatmapFeatureProperties(Double sumProfit) {
+    private Integer hour;
+    public HeatmapFeatureProperties(Double sumProfit, Integer hour) {
         this.sumProfit = sumProfit;
+        this.hour = hour;
     }
 }
 @Data
@@ -20,16 +22,7 @@ class HeatmapFeatureGeometry {
         this.coordinates = coordinates;
     }
 }
-@Data
-class HeatmapFeature {
-    private final String type = "Feature";
-    private HeatmapFeatureProperties properties;
-    private HeatmapFeatureGeometry geometry;
-    public HeatmapFeature(HeatmapFeatureProperties properties, HeatmapFeatureGeometry geometry) {
-        this.properties = properties;
-        this.geometry = geometry;
-    }
-}
+
 
 @Data
 @NoArgsConstructor
@@ -37,16 +30,8 @@ class HeatmapFeature {
 public class HeatmapPointMapBoxDTO {
     private final String type = "FeatureCollection";
     private HeatmapFeature[] features;
-    public HeatmapPointMapBoxDTO(HeatmapResponseDTO raw) {
-        this.features = new HeatmapFeature[raw.getPoints().size()];
-        for (int i = 0; i < this.features.length; i++) {
-            HeatmapPointDTO p = raw.getPoints().get(i);
-            Double[] thingy = {p.getY(), p.getX()};
-            HeatmapFeatureGeometry geo = new HeatmapFeatureGeometry(thingy);
-            HeatmapFeatureProperties prop = new HeatmapFeatureProperties(p.getValue());
-            HeatmapFeature f = new HeatmapFeature(prop, geo);
-            this.features[i] = f;
-        }
-    }
+    // public HeatmapPointMapBoxDTO(HeatmapFeature[] features) {
+    //     this.features = features;
+    // }
 }
 

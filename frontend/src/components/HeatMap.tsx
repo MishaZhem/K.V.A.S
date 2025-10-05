@@ -63,58 +63,58 @@ const MapAnimation = ({username}: {username: string}) => {
             zoom: 12
         });
         
-            const m = map.current;
-            m.on('load', () => {
-                m.addLayer({
-                    id: 'collisions',
-                    type: 'circle',
-                    source: {
-                        type: 'geojson',
-                        data: `http://localhost:8082/api/driver/heatmap/url?hour=${curHour}&username=${username}`
-                    },
-                    paint: {
-                        'circle-radius': 5
-                        // [
-                        //     'interpolate',
-                        //     ['linear'],
-                        //     ['number', ['get', 'Casualty']],
-                        //     0,
-                        //     4,
-                        //     5,
-                        //     24
-                        // ]
-                        ,
-                        'circle-color': '#2DC4B2',
-                        // [
-                        //     'interpolate',
-                        //     ['linear'],
-                        //     ['number', ['get', 'Casualty']],
-                        //     0,
-                        //     '#2DC4B2',
-                        //     1,
-                        //     '#3BB3C3',
-                        //     2,
-                        //     '#669EC4',
-                        //     3,
-                        //     '#8B88B6',
-                        //     4,
-                        //     '#A2719B',
-                        //     5,
-                        //     '#AA5E79'
-                        // ],
-                        'circle-opacity': 1
-                    },
-                    filter: ['==', ['number', ['get', 'Hour']], 12]
-                });
+        const m = map.current;
+        m.on('load', () => {
+            m.addLayer({
+                id: 'collisions',
+                type: 'circle',
+                source: {
+                    type: 'geojson',
+                    data: `http://localhost:8082/api/driver/heatmap/url?hour=${curHour}&username=${username}`
+                },
+                paint: {
+                    'circle-radius': 5
+                    // [
+                    //     'interpolate',
+                    //     ['linear'],
+                    //     ['number', ['get', 'Casualty']],
+                    //     0,
+                    //     4,
+                    //     5,
+                    //     24
+                    // ]
+                    ,
+                    'circle-color': '#2DC4B2',
+                    // [
+                    //     'interpolate',
+                    //     ['linear'],
+                    //     ['number', ['get', 'Casualty']],
+                    //     0,
+                    //     '#2DC4B2',
+                    //     1,
+                    //     '#3BB3C3',
+                    //     2,
+                    //     '#669EC4',
+                    //     3,
+                    //     '#8B88B6',
+                    //     4,
+                    //     '#A2719B',
+                    //     5,
+                    //     '#AA5E79'
+                    // ],
+                    'circle-opacity': 1
+                },
+                filter: ['==', ['number', ['get', 'hour']], 11]
+            });
 
-            const slider = document.getElementById('slider');
-            if (slider) {
-                slider.addEventListener('input', (event) => {
-                    const hour = parseInt((event.target as HTMLInputElement).value);
-                    // update the map
-                    m.setFilter('collisions', ['==', ['number', ['get', 'Hour']], hour]);
-                });
-            }
+        const slider = document.getElementById('slider');
+        if (slider) {
+            slider.addEventListener('input', (event) => {
+                const hour = parseInt((event.target as HTMLInputElement).value);
+                // update the map
+                m.setFilter('collisions', ['==', ['number', ['get', 'hour']], hour]);
+            });
+        }
         
 
             // m.addLayer({
