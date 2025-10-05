@@ -92,7 +92,6 @@ public class GraphService {
 
         // Build the docker exec command
         ProcessBuilder processBuilder = new ProcessBuilder(
-                "docker", "exec", "-i", PYTHON_CONTAINER_NAME,
                 "python", PYTHON_SCRIPT_PATH
         );
         processBuilder.redirectErrorStream(false);

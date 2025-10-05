@@ -25,7 +25,7 @@ services:
 
   python-service:
     <<: *base-config
-    image: python:3.9-slim
+    image: python:3.13-slim
     container_name: python-service
     volumes:
       - ./python-scripts:/scripts
