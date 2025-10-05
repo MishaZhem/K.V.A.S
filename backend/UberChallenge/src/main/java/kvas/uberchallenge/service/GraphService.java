@@ -46,7 +46,7 @@ public class GraphService {
         // Header
         String[] header = {
                 "driverLat", "driverLon", "rating", "earnerType", "experienceMonths",
-                "fuelType", "isEv", "vehicleType", "productType", "weatherType"
+                "fuelType", "isEv", "vehicleType", "weatherType"
         };
         csv.append(String.join(",", header)).append("\n");
 
@@ -60,7 +60,7 @@ public class GraphService {
                 String.valueOf(driver.getFuelType().ordinal()),
                 String.valueOf(driver.getIsEv()),
                 String.valueOf(driver.getVehicleType().ordinal()),
-                "0"  // placeholder weatherType
+                "0"
         };
 
         String line = String.join(",", driverData);
