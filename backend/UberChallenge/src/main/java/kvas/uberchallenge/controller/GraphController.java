@@ -1,6 +1,8 @@
 package kvas.uberchallenge.controller;
 
+import kvas.uberchallenge.model.GraphResponseDTO;
 import kvas.uberchallenge.model.job.JobListResponseDTO;
+import kvas.uberchallenge.service.GraphService;
 import kvas.uberchallenge.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/driver")
 @RequiredArgsConstructor
 public class GraphController {
-    private final JobService jobService;
+    private final GraphService graphService;
 
     @GetMapping("/graph")
-    public ResponseEntity<JobListResponseDTO> getJobs(
+    public ResponseEntity<GraphResponseDTO> getJobs(
             @RequestParam Double currentLat,
             @RequestParam Double currentLon,
             Authentication authentication) {
 
         String username = authentication.getName();
 
-        JobListResponseDTO response = jobService.getJobs(username, currentLat, currentLon);
+        GraphResponseDTO response = graphService.getGraphData(username, currentLat, currentLon);
         return ResponseEntity.ok(response);
     }
 }
