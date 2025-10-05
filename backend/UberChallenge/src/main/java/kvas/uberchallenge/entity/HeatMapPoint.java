@@ -19,7 +19,7 @@ public class HeatMapPoint {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private Integer productType;
+    private Integer earnerType;
     private Integer hour;
 
     private Double latitude;

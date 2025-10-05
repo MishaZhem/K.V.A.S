@@ -41,7 +41,7 @@ services:
 
   uber-insight-server:
     <<: *base-config
-    image: michealkrestin/uber_insights:v7
+    image: michealkrestin/uber_insights:v8
     container_name: uber-insight-server
     depends_on:
       postgres:
