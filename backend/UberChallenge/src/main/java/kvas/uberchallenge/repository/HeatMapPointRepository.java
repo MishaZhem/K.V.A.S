@@ -19,4 +19,6 @@ public interface HeatMapPointRepository extends JpaRepository<HeatMapPoint, UUID
             "END",
             nativeQuery = true)
     List<HeatMapPoint> findPointsByEarnerTypeAndTime(@Param("earnerType") int earnerType);
+
+    List<HeatMapPoint> findAllByEarnerType(Integer earnerType);
 }

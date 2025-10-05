@@ -31,8 +31,8 @@ public class HeatmapService {
     public HeatmapPointMapBoxDTO getHeatmap(String username)
     {
         EarnerType earnerType = driverRepository.getDriverByUser_Username(username).get().getEarnerType();
-        List<HeatmapFeature> allFeatures = new ArrayList<>();
-        List<HeatMapPoint> heatMapPoints = heatMapPointRepository.findPointsByEarnerTypeAndTime(earnerType.getValue());
+        List<HeatmapFeature> allFeatures;
+        List<HeatMapPoint> heatMapPoints = heatMapPointRepository.findAllByEarnerType(earnerType.getValue());
         allFeatures = heatMapPoints.stream()
                 .map(p -> new HeatmapFeature(p, p.getHour()))
                 .toList();
