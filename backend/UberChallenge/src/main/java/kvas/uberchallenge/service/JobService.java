@@ -87,7 +87,7 @@ public class JobService {
     }
 
     private String executePythonScript(String inputCsv) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("python", PYTHON_SCRIPT_PATH);
+        ProcessBuilder processBuilder = new ProcessBuilder(".venv/bin/python", PYTHON_SCRIPT_PATH);
         processBuilder.redirectErrorStream(false); // Keep stderr separate
         Process process = processBuilder.start();
 

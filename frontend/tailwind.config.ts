@@ -6,8 +6,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['"JetBrains Mono"', 'monospace'],
-        sans: ['"Open Sans"', 'sans']
+        mono: ['"JetBrains Mono"', "monospace"],
       },
       colors: {
         primary_dark: "#0B0B0B",
@@ -18,7 +17,10 @@ module.exports = {
         secondary_dark: "#262626",
         secondary_light: "#454545",
       },
+      screens: {
+        small: "500px",
+      },
     },
   },
   plugins: [],
-}
+};

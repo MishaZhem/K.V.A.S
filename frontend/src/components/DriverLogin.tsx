@@ -74,17 +74,17 @@ const Login = ({ updateUserContext }: { updateUserContext: (newUserContext: User
           }}>
             {loginResponseLine && <p id="errorline" className="text-red-500 text-center text-sm">{loginResponseLine}</p>}
             <div>
-              <label htmlFor="driverUsername" className="font-sans block mb-2 text-sm font-medium text-white_secondary uppercase tracking-wider">Username</label>
+              <label htmlFor="driverUsername" className="block mb-2 text-sm font-medium text-white_secondary uppercase tracking-wider">Username</label>
               <input id="driverUsername" name="driverUsername" className="bg-black/30 border border-white/20 text-white_primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
             </div>
             <div>
-              <label htmlFor="driverPassword" className="font-sans block mb-2 text-sm font-medium text-white_secondary uppercase tracking-wider">Password</label>
+              <label htmlFor="driverPassword" className="block mb-2 text-sm font-medium text-white_secondary uppercase tracking-wider">Password</label>
               <input type="password" id="driverPassword" name="driverPassword" className="bg-black/30 border border-white/20 text-white_primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
             </div>
-            <button type="submit" className="font-mono w-full text-white_primary textwhite bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-white/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase tracking-widest border border-white/20 transition-colors duration-100">
+            <button type="submit" className="w-full text-white_primary textwhite bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-white/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase tracking-widest border border-white/20 transition-colors duration-100">
               Log In
             </button>
-            <p onClick={() => { setShouldUserRegister(true); }} className="font-sans opacity-40"><span className="opacity-100">No account?</span> Sign up!</p>
+            <p onClick={() => { setShouldUserRegister(true); }}>No account? Sign up!</p>
           </form>
         </div>
       </div>
