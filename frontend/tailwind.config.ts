@@ -18,10 +18,7 @@ module.exports = {
         secondary_dark: "#262626",
         secondary_light: "#454545",
       },
-      screens: {
-        small: "500px",
-      },
     },
   },
   plugins: [],
-};
+}

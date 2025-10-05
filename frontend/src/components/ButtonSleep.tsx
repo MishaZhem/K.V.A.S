@@ -9,7 +9,7 @@ const ButtonSleep = (props: ButtonProps) => {
     return (
         <div className="relative w-full h-15 overflow-hidden backdrop-blur-md">
             <div className="absolute inset-0 flex items-center justify-center">
-                <div className="absolute inset-0">
+                <div className="absolute inset-0    ">
                     <div className="absolute top-0 left-0 right-0 bottom-0 border-1 border-teal-600"></div>
 
                     <div className="absolute top-0 left-0 w-12 h-4 border-t-3 border-l-3 border-teal-400"></div>

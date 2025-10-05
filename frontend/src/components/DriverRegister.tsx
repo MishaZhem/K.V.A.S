@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import type { DriverInfo, UserContextType } from "../types/userContext";
+import type { UserContextType } from "../types/userContext";
 import endpoints from "../data/endpoints";
 import InteractiveBackground from "./InteractiveBackground";
 
@@ -59,35 +59,8 @@ const DriverRegisterWidget = ({ updateUserContext }: { updateUserContext: (newUs
               if (!(response.ok)) {
                 setLoginResponseLine("Bad!");
               } else {
-              const responseLogin = await fetch(endpoints.login, {
-              mode: "cors",
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                username: usernameInput,
-                password: passwordInput,
-              })
-            });
-            if (!((responseLogin.ok) && (responseLogin.headers.has("Authorization")))) {
-              setLoginResponseLine("Bad!");
-            } else {
-              const authToken = responseLogin.headers.get("Authorization") as string;
-              window.localStorage.setItem("uberapp-jwt", authToken);
-              // alert(authToken);
-              const driverInfo = await responseLogin.json() as DriverInfo;
-              setLoginResponseLine("good!");
-              updateUserContext({
-                username: driverInfo.username,
-                loginToken: authToken,
-                at: { lat: 0., lon: 0. },
-                isCourier: driverInfo.earnerType === "COURIER",
-                jobsThisWeek: 0, // change later
-              })
-              // updateUserContext(await response.json() as UserContextType);
-            }
-          }
+                alert(await response.json())
+              }
             }}>
               {loginResponseLine && <p id="errorline" className="text-red-500 text-center text-sm">{loginResponseLine}</p>}
               <div>
@@ -106,31 +79,20 @@ const DriverRegisterWidget = ({ updateUserContext }: { updateUserContext: (newUs
 
               <div>
                 <label htmlFor="driverEarnerType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">What type of earner are you?</label>
-                <select name="driverEarnerType" id="driverEarnerType">
-                  <option value="courier">Courier (Uber Eats)</option>
-                  <option value="driver">Driver (Passengers)</option>
-                </select>
+                <input id="driverEarnerType" name="driverEarnerType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
               </div>
 
               <div>
                 <label htmlFor="driverVehicleType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Your vehicle type</label>
-                <select name="driverVehicleType" id="driverVehicleType">
-                  <option value="car">Car</option>
-                  <option value="scooter">Scooter</option>
-                  <option value="bike">Bike</option>
-                </select>
+                <input id="driverVehicleType" name="driverVehicleType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
               </div>
               <div>
                 <label htmlFor="driverFuelType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Your fuel type</label>
-                <select name="driverFuelType" id="driverFuelType">
-                  <option value="gas">Gas</option>
-                  <option value="EV">EV</option>
-                  <option value="hybrid">Hybrid</option>
-                </select>
+                <input id="driverFuelType" name="driverFuelType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
               </div>
               <div>
                 <label htmlFor="driverExperienceMonths" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Your experience in months</label>
-                <input type="number" id="driverExperienceMonths" name="driverExperienceMonths" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
+                <input id="driverExperienceMonths" name="driverExperienceMonths" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
               </div>
               <button type="submit" className="w-full text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-white/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase tracking-widest border border-white/20 transition-colors duration-100">
                 Sign up
