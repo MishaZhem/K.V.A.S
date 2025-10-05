@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       fontFamily: {
         mono: ['"JetBrains Mono"', 'monospace'],
+        sans: ['"Open Sans"', 'sans']
       },
       colors: {
         primary_dark: "#0B0B0B",
