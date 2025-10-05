@@ -1,6 +1,5 @@
 //Import components
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
 import DriverLoginWidget from "./components/DriverLogin";
 import { useState } from "react";
 import type { UserContextType } from "./types/userContext";
@@ -8,7 +7,7 @@ import { Map } from "./pages";
 
 const Router = () => {
   const loading = false;
-  const [userContext, setUserContext] = useState<UserContextType | undefined>(undefined);
+  const [userContext, setUserContext] = useState<UserContextType | undefined>();
   // Routing configuration
   const routing = createBrowserRouter(
     [

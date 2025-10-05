@@ -1,54 +1,45 @@
-import { useState, useEffect, useRef } from "react";
+
+import { useState } from "react";
 import { motion, type Transition } from "framer-motion";
 import { user } from "../assets";
 import type { UserContextType } from "../types/userContext";
+import type { JobItem } from "../types/job";
+import JobItemDisplay from "./JobItem";
 
+// A slightly softer spring for a smoother layout animation
 const layoutSpring: Transition = { type: "spring", stiffness: 500, damping: 35 };
 
-export default function TopMenu({ userContext }: { userContext: UserContextType }) {
+const JobList = ({ jobs }: { jobs: JobItem[] }) => (
+  <div>
+    {jobs.map((job, index) => (
+      <JobItemDisplay jobs={jobs} jobi={index} />
+    ))}
+  </div>
+);
+
+
+export default function TopMenu({ userContext, jobs }: { userContext: UserContextType, jobs: JobItem[] }) {
   const [activeView, setActiveView] = useState<"jobs" | "profile" | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   const toggleView = (view: "jobs" | "profile") =>
     setActiveView(prev => (prev === view ? null : view));
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setActiveView(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
     <motion.div
-      ref={menuRef}
       layout
       transition={layoutSpring}
-      className="text-[#ABABAB] bg-[#171717] absolute right-10 top-10 shadow-xl/30 overflow-hidden border-2 border-[#434343]"
+      className="text-[#ABABAB] bg-[#171717] absolute w-max centerMes top-10 shadow-xl/30 overflow-hidden border-2 border-[#434343]"
       style={{ borderRadius: 24 }}
     >
       <motion.div layout="position" className="p-3 pl-4 font-mono">
-        <div className="flex gap-4 justify-around items-center">
-          <button
-            onClick={() => toggleView("jobs")}
-            className={`transition-colors hover:text-white_primary duration-300 ${activeView === "jobs" ? "text-white_primary" : "text-white_secondary"
-              }`}
-          >
+        <div className="flex gap-4 opacity-70 justify-around items-center">
+          <button onClick={() => toggleView("jobs")}>
             {activeView === "jobs" ? "> jobs <" : "[ jobs ]"}
           </button>
-
-          <button
-            onClick={() => toggleView("profile")}
-            className={`transition-colors hover:text-white_primary duration-300 ${activeView === "profile" ? "text-white_primary" : "text-white_secondary"
-              }`}
-          >
+          <button onClick={() => toggleView("profile")}>
             {activeView === "profile" ? "> profile <" : "[ profile ]"}
           </button>
-
-          <img src={user} className="w-8 opacity-80" alt="user avatar" />
+          <img src={user} className="w-8" alt="user avatar" />
         </div>
       </motion.div>
 
@@ -61,24 +52,28 @@ export default function TopMenu({ userContext }: { userContext: UserContextType 
           transition={{ duration: 0.2 }}
         >
           <hr className="border-[#434343] mx-5 mb-2" />
-
           {activeView === "profile" && (
-            <div className="font-sans p-2 pt-0 pl-5 pr-4 pb-4">
+            <div className="p-2 pt-0 pl-5 pr-4 pb-4">
               <h2 className="font-bold">Profile and settings</h2>
               <p className="mt-2">Name: {userContext.username}</p>
-              <button className="opacity-70">Change name</button>
+              <p className="mt-2">Type: {userContext.isCourier ? "Courier" : "Driver"}</p>
               <hr className="border-[#434343] my-2" />
               <p>
                 You are registered as a {userContext.isCourier ? "courier" : "driver"} <br /> at Uber.
               </p>
-              <button className="opacity-70">Change registration</button>
             </div>
           )}
 
           {activeView === "jobs" && (
             <div className="font-sans p-2 pt-0 pl-5 pr-4 pb-4">
-              <h2 className="font-bold">Available Jobs</h2>
-              <p className="text-white_secondary/80">No jobs available right now.</p>
+              <h2 className="font-bold mb-2">Available Jobs</h2>
+              {jobs.length > 0 ? (
+                <JobList jobs={jobs} />
+              ) : (
+                <p className="text-white_secondary/80">
+                  No jobs available right now.
+                </p>
+              )}
             </div>
           )}
         </motion.div>

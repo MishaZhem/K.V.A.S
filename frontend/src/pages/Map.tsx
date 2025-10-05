@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import jobs_test from "../data/test_jobs.json";
 import { uber } from "../assets";
 import { HeatMap, TopMenu } from "../components";
 import type { UserContextType } from "../types/userContext";
@@ -13,38 +12,57 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
   const [jobs, setJobs] = useState<JobItem[]>([]);
   const [jobsShown, setJobsShown] = useState(false);
   const [profileShown, setProfileShown] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+
   useEffect(() => {
-    // if (user && user.username === "admin") {
-    //     setJobs(jobs_test);
-    //     return;
-    // }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        },
+        (err) => {
+          setLatitude(52.370216);
+          setLongitude(4.895168);
+        }
+      );
+    } else {
+      setLatitude(52.370216);
+      setLongitude(4.895168);
+    }
+  }, []);
+
+  useEffect(() => {
     if (user) {
-      if (user.username === "admin") { setJobs(jobs_test); return; }
       if (window.localStorage.getItem('uberapp-jwt') === null) { return; }
+      if (latitude === null || longitude === null) return;
       const token = window.localStorage.getItem('uberapp-jwt') as string;
-      fetch(endpoints.jobs.view, {
+      fetch(`${endpoints.jobs.view}?currentLat=${latitude}&currentLon=${longitude}`, {
         method: "GET",
         mode: "cors",
         headers: {
-          "Authorization": token,
+          "Content-Type": "application/json",
+          "Authorization": user.loginToken,
         }
       }).then((v) => v.json()).then((v) => {
-        if (v.jobs === null) { setJobs([]); return; }
+        if (!v.jobs) { setJobs([]); return; }
         setJobs(v.jobs as JobItem[]);
       })
     }
-  }, [user])
+  }, [user, longitude, latitude])
+
   if (user) {
     return (
       <div className="relative">
         <HeatMap username={user.username} userToken={user.loginToken} />
-        <img src={uber} className="absolute left-10 top-10 w-32 opacity-30" alt="" />
+        <img src={uber} className="absolute hidden small:block left-10 top-10 w-32 opacity-30" alt="" />
         <AnimatePresence mode="wait">
 
           <div className="flex flex-col">
-            <TopMenu userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown} />
-            <Jobs shown={jobsShown} jobs={jobs}></Jobs>
-            <Profile shown={profileShown} userContext={user}></Profile>
+            <TopMenu userContext={user} jobs={jobs} />
+            {/* <Jobs shown={jobsShown} jobs={jobs}></Jobs> */}
+            {/* <Profile shown={profileShown} userContext={user}></Profile> */}
           </div>
 
         </AnimatePresence>

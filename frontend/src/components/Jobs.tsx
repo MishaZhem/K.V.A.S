@@ -1,9 +1,12 @@
 import type { JobItem } from "../types/job"
 import JobItemDisplay from "./JobItem"
 
-const Jobs = ({jobs, shown}: {jobs: JobItem[], shown: boolean}) => {
-    if (!(shown)) { return <></>}
-    const contents = jobs.length === 0 ? <div className={`job-item
+const Jobs = ({ jobs, shown }: { jobs: JobItem[], shown: boolean }) => {
+    console.log("shown", shown)
+    if (!(shown)) { return <></> }
+    console.log("jobs", jobs, jobs.length);
+    const contents = jobs.length === 0 ?
+        <div className={`job-item
             text-gray-400
             bg-[#171717]
             border-2
@@ -14,12 +17,12 @@ const Jobs = ({jobs, shown}: {jobs: JobItem[], shown: boolean}) => {
             hover:shadow-md
             transition-shadow
             duration-200
-            cursor-pointer
-`}>
-    <p>There are currently no jobs.</p>
-</div> : jobs.map((j, i) => {return (<JobItemDisplay jobs={jobs} jobi={i}></JobItemDisplay>)}).slice(0, 5);
+            cursor-pointer`}>
+            <p>There are currently no jobs.</p>
+        </div> :
+        jobs.map((j, i) => { return (<JobItemDisplay jobs={jobs} jobi={i}></JobItemDisplay>) }).slice(0, 5);
     return (
-    <div className="
+        <div className="
     overflow-y-auto 
     max-h-1/2 
     rounded-3xl 
@@ -31,8 +34,8 @@ const Jobs = ({jobs, shown}: {jobs: JobItem[], shown: boolean}) => {
     right-10 
     top-30 
     shadow-xl/30">
-        <div className="p-2 pl-3">{contents}</div>
-    </div>
+            <div className="p-2 pl-3">{contents}</div>
+        </div>
     )
 }
 export default Jobs;
