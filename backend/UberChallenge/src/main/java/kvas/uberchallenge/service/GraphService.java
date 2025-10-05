@@ -5,29 +5,41 @@ import kvas.uberchallenge.model.GraphResponseDTO;
 import kvas.uberchallenge.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class GraphService {
     private final DriverRepository driverRepository;
+    private final ResourceLoader resourceLoader;
 
-    private static final String PYTHON_SCRIPT_PATH = "src/main/resources/python/kvas_graphmaker.py";
+    private static final String PYTHON_CONTAINER_NAME = "python-service";
+    private static final String PYTHON_SCRIPT_PATH = "/scripts/kvas_graphmaker.py";
 
     public GraphResponseDTO getGraphData(String username, Double currentLat, Double currentLon) {
         Driver driver = driverRepository.getDriverByUser_Username(username)
                 .orElseThrow(() -> new RuntimeException("Driver not found for username: " + username));
 
         try {
-            String inputCsv = buildInputCsv(driver, currentLat, currentLon);
-            String outputCsv = executePythonScript(inputCsv);
+            String driverCsv = buildDriverInputCsv(driver, currentLat, currentLon);
+            String dataGraphCsv = readDataGraphCsv();
+
+            // Combine the two CSV contents as expected by the Python script
+            String scriptInput = "---DATA_GRAPH_CSV_START---\n" +
+                    dataGraphCsv +
+                    "\n---DATA_GRAPH_CSV_END---\n" +
+                    driverCsv;
+
+            String outputCsv = executePythonScriptInContainer(scriptInput);
             List<Boolean> graphData = parseOutputCsv(outputCsv);
 
             return GraphResponseDTO.builder()
@@ -36,22 +48,26 @@ public class GraphService {
 
         } catch (IOException | InterruptedException e) {
             log.error("Failed to get graph data for driver {}", username, e);
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            }
             throw new RuntimeException("Failed to process graph analysis", e);
         }
     }
 
-    private String buildInputCsv(Driver driver, Double currentLat, Double currentLon) {
-        StringBuilder csv = new StringBuilder();
+    private String readDataGraphCsv() throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:python-models/data_graph.csv");
+        try (InputStream inputStream = resource.getInputStream()) {
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
 
+    private String buildDriverInputCsv(Driver driver, Double currentLat, Double currentLon) {
         // Header
-        String[] header = {
-                "driverLat", "driverLon", "rating", "earnerType", "experienceMonths",
-                "fuelType", "isEv", "vehicleType", "productType", "weatherType"
-        };
-        csv.append(String.join(",", header)).append("\n");
+        String header = "driverLat,driverLon,rating,earnerType,experienceMonths,fuelType,isEv,vehicleType,productType,weatherType";
 
         // Single row with driver data
-        String[] driverData = {
+        String driverData = String.join(",",
                 String.valueOf(currentLat),
                 String.valueOf(currentLon),
                 String.valueOf(driver.getRating()),
@@ -61,59 +77,65 @@ public class GraphService {
                 String.valueOf(driver.getIsEv()),
                 String.valueOf(driver.getVehicleType().ordinal()),
                 String.valueOf(driver.getEarnerType().ordinal() == 0 ? 0 : 1),
-                "0"
-        };
+                "0" // Assuming default weather
+        );
 
-        String line = String.join(",", driverData);
-        csv.append(line).append("\n");
-
-        return csv.toString();
+        return header + "\n" + driverData + "\n";
     }
 
-    private String executePythonScript(String inputCsv) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("python", PYTHON_SCRIPT_PATH);
+    /**
+     * Executes Python script in the python-service Docker container
+     * Uses docker exec to run the script and pipes CSV data via stdin
+     */
+    private String executePythonScriptInContainer(String scriptInput) throws IOException, InterruptedException {
+        log.debug("Executing Python graph script in container: {}", PYTHON_CONTAINER_NAME);
+
+        // Build the docker exec command
+        ProcessBuilder processBuilder = new ProcessBuilder(
+                "docker", "exec", "-i", PYTHON_CONTAINER_NAME,
+                "python", PYTHON_SCRIPT_PATH
+        );
         processBuilder.redirectErrorStream(false);
+
         Process process = processBuilder.start();
 
-        // Write CSV to stdin
-        Thread writerThread = new Thread(() -> {
-            try (OutputStreamWriter writer = new OutputStreamWriter(process.getOutputStream())) {
-                writer.write(inputCsv);
-                writer.flush();
-            } catch (IOException e) {
-                log.error("Error writing to Python process stdin", e);
-            }
-        });
-        writerThread.start();
+        // Write the combined CSV input to the Python script's stdin
+        try (OutputStreamWriter writer = new OutputStreamWriter(process.getOutputStream())) {
+            writer.write(scriptInput);
+            writer.flush();
+        } catch (IOException e) {
+            log.error("Failed to write input to Python process", e);
+            process.destroyForcibly();
+            throw e;
+        }
 
-        // Read stdout
-        StringBuilder output = new StringBuilder();
+        // Read the output
+        String output;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
+            output = reader.lines().collect(Collectors.joining("\n"));
         }
 
-        // Read stderr for errors
-        StringBuilder errors = new StringBuilder();
+        // Read any errors from stderr
+        String errors;
         try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-            String line;
-            while ((line = errorReader.readLine()) != null) {
-                errors.append(line).append("\n");
-                log.warn("Python stderr: {}", line);
-            }
+            errors = errorReader.lines().collect(Collectors.joining("\n"));
         }
 
-        writerThread.join();
+        if (!errors.isEmpty()) {
+            log.warn("Python script stderr output: {}", errors);
+        }
+
+        // Wait for the process to complete
         int exitCode = process.waitFor();
 
         if (exitCode != 0) {
-            throw new RuntimeException("Python script failed with exit code " + exitCode +
-                    ". Errors: " + errors.toString());
+            log.error("Python script failed with exit code {}. Error output: {}", exitCode, errors);
+            throw new RuntimeException("Python script execution failed with exit code " + exitCode +
+                    ". Errors: " + errors);
         }
 
-        return output.toString().trim();
+        log.debug("Python graph script executed successfully");
+        return output.trim();
     }
 
     private List<Boolean> parseOutputCsv(String csvOutput) {

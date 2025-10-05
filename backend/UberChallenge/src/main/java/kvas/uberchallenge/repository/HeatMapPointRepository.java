@@ -16,9 +16,7 @@ public interface HeatMapPointRepository extends JpaRepository<HeatMapPoint, UUID
             "    WHEN :earnerType = 0 THEN hm.product_type IN (0, 1, 2, 3) " +
             "    WHEN :earnerType = 1 THEN hm.product_type = 4 " +
             "    ELSE FALSE " +
-            "END " +
-            "AND hm.hour = :hour",
+            "END",
             nativeQuery = true)
-    List<HeatMapPoint> findPointsByEarnerTypeAndTime(@Param("earnerType") int earnerType,
-                                                     @Param("hour") int hour);
+    List<HeatMapPoint> findPointsByEarnerTypeAndTime(@Param("earnerType") int earnerType);
 }

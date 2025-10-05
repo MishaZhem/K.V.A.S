@@ -17,19 +17,20 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class MockDataInitializer implements CommandLineRunner {
-
     private final OrderRepository orderRepository;
     private final HeatMapPointRepository heatMapPointRepository;
+    private final PathMatchingResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
 
     @Override
     public void run(String... args) throws Exception {
@@ -104,7 +105,7 @@ public class MockDataInitializer implements CommandLineRunner {
         }
     }
 
-    private void generateOrders()
+    private void generateOrders() throws IOException
     {
         if (orderRepository.count() > 0) {
             log.info("Orders already exist in the database. Skipping mock data creation.");
@@ -118,14 +119,33 @@ public class MockDataInitializer implements CommandLineRunner {
         ProductType[] productTypes = ProductType.values();
         PaymentType[] paymentTypes = PaymentType.values();
         WeatherType[] weatherTypes = WeatherType.values();
+        // Read from classpath instead of filesystem
+        Resource dataGraphResource = resourceResolver.getResource("classpath:python/models/data_graph.csv");
+        List<String> lines;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(dataGraphResource.getInputStream()))) {
+            lines = reader.lines().toList();
+        }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 200; i++) {
+            String line = lines.get(random.nextInt(lines.size()));
+            String[] parts = line.split(",");
+
+            double startLat = Double.parseDouble(parts[4]);
+            double startLon = Double.parseDouble(parts[5]);
+            double endLat = Double.parseDouble(parts[6]);
+            double endLon = Double.parseDouble(parts[7]);
+
+            double startLatOffset = (random.nextDouble() - 0.5);
+            double startLonOffset = (random.nextDouble() - 0.5);
+            double endLatOffset = (random.nextDouble() - 0.5);
+            double endLonOffset = (random.nextDouble() - 0.5);
+
             Order order = Order.builder()
-                    .startLat(random.nextDouble(51.0, 53.0))
-                    .startLon(random.nextDouble(4.0, 5.5))
-                    .endLat(random.nextDouble(51.0, 53.0))
-                    .endLon(random.nextDouble(4.0, 5.5))
-                    .startingTime(random.nextInt(0, 5))
+                    .startLat(startLat + startLatOffset)
+                    .startLon(startLon + startLonOffset)
+                    .endLat(endLat + endLatOffset)
+                    .endLon(endLon + endLonOffset)
+                    .startingTime(random.nextInt(0, 23))
                     .productType(productTypes[random.nextInt(productTypes.length)])
                     .paymentType(paymentTypes[random.nextInt(paymentTypes.length)])
                     .weatherType(weatherTypes[random.nextInt(weatherTypes.length)])

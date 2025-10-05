@@ -18,7 +18,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         String message = (accessDeniedException != null && accessDeniedException.getMessage() != null) ?
                 accessDeniedException.getMessage() : "Authorization failed";
 
-        response.setHeader("cmast-server-denied-reason", "Authorization failed");
+        response.setHeader("denied-reason", "Authorization failed");
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType("application/json;charset=UTF-8");
 

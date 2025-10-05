@@ -8,6 +8,15 @@ import os
 from io import StringIO
 from catboost import CatBoostRegressor
 
+# --- SCRIPT START ---
+# This script now expects input in a specific format from stdin:
+# A line containing '---DATA_GRAPH_CSV_START---'
+# The content of data_graph.csv
+# A line containing '---DATA_GRAPH_CSV_END---'
+# The content of the driver CSV data
+# --- SCRIPT END ---
+
+
 # Load models once at startup
 model_dir = os.path.join(os.path.dirname(__file__), "models")
 try:

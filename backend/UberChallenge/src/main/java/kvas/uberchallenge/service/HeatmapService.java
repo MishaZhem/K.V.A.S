@@ -20,6 +20,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import com.opencsv.CSVWriter;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @RequiredArgsConstructor
 public class HeatmapService {
@@ -30,16 +32,13 @@ public class HeatmapService {
     {
         EarnerType earnerType = driverRepository.getDriverByUser_Username(username).get().getEarnerType();
         List<HeatmapFeature> allFeatures = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-                List<HeatMapPoint> heatMapPoints = heatMapPointRepository.findPointsByEarnerTypeAndTime(earnerType.getValue(), i);
-                for (HeatMapPoint p : heatMapPoints) {
-                        allFeatures.add(new HeatmapFeature(p, i));
-                }
-        }
+        List<HeatMapPoint> heatMapPoints = heatMapPointRepository.findPointsByEarnerTypeAndTime(earnerType.getValue());
+        allFeatures = heatMapPoints.stream()
+                .map(p -> new HeatmapFeature(p, p.getHour()))
+                .toList();
+
         HeatmapPointMapBoxDTO mapBoxDTO = new HeatmapPointMapBoxDTO(allFeatures.toArray(new HeatmapFeature[1]));
         return mapBoxDTO;
-        
-        
     }
 }
 

@@ -4,11 +4,35 @@ import catboost as catboost
 from catboost import CatBoostRegressor
 import sys
 import os
+from io import StringIO
 
-driver = pd.read_csv(sys.stdin)
+# --- SCRIPT START ---
+# This script now expects input in a specific format from stdin:
+# A line containing '---DATA_GRAPH_CSV_START---'
+# The content of data_graph.csv
+# A line containing '---DATA_GRAPH_CSV_END---'
+# The content of the driver CSV data
+# --- SCRIPT END ---
+
+# Read all stdin
+full_input = sys.stdin.read()
+
+# Split the input into the two CSV parts
+try:
+    data_graph_part = full_input.split('---DATA_GRAPH_CSV_END---')[0]
+    driver_part = full_input.split('---DATA_GRAPH_CSV_END---')[1]
+
+    data_graph_csv = data_graph_part.replace('---DATA_GRAPH_CSV_START---', '').strip()
+    driver_csv = driver_part.strip()
+
+    df_historic = pd.read_csv(StringIO(data_graph_csv))
+    driver = pd.read_csv(StringIO(driver_csv))
+except Exception as e:
+    print(f"Error parsing input from stdin: {e}", file=sys.stderr)
+    sys.exit(1)
+
 
 model_dir = os.path.join(os.path.dirname(__file__), "models")
-df_historic = pd.read_csv(os.path.join(model_dir, "data_graph.csv"))  # assuming static file in current directory
 
 modelDist = CatBoostRegressor()
 modelDist.load_model(os.path.join(model_dir, "catboost_modelDist.cbm"))

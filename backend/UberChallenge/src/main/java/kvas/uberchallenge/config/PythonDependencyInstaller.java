@@ -1,6 +1,7 @@
 package kvas.uberchallenge.config;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -9,28 +10,32 @@ import java.io.InputStreamReader;
 
 @Component
 public class PythonDependencyInstaller implements CommandLineRunner {
-    String pythonExecutable = System.getProperty("python.executable.path", "python");
-
+    private static final String PYTHON_EXECUTABLE = System.getProperty("python.executable.path", "/usr/bin/python3");
 
     @Override
     public void run(String... args) throws Exception {
-        String pythonResourcesPath = "src/main/resources/python";
-        File pythonDir = new File(pythonResourcesPath);
+        // Log the Python executable being used
+        System.out.println("Using Python executable: " + PYTHON_EXECUTABLE);
 
-        if (!pythonDir.exists() || !pythonDir.isDirectory()) {
-            System.err.println("Python resource directory not found at: " + pythonDir.getAbsolutePath());
+        // Get requirements.txt from classpath
+        ClassPathResource requirementsResource = new ClassPathResource("python/requirements.txt");
+        if (!requirementsResource.exists()) {
+            System.err.println("requirements.txt not found in classpath:python/");
             return;
         }
 
-        File requirementsFile = new File(pythonDir, "requirments.txt");
-        if (!requirementsFile.exists()) {
-            System.err.println("requirments.txt not found in: " + pythonDir.getAbsolutePath());
-            return;
-        }
+        File requirementsFile = requirementsResource.getFile();
+        System.out.println("Installing Python dependencies from " + requirementsFile.getAbsolutePath() + "...");
 
-        System.out.println("Installing python dependencies from requirments.txt...");
-
-        ProcessBuilder processBuilder = new ProcessBuilder(pythonExecutable, "-m", "pip", "install", "-r", "requirments.txt");        processBuilder.directory(pythonDir);
+        // Run pip install
+        ProcessBuilder processBuilder = new ProcessBuilder(
+                PYTHON_EXECUTABLE,
+                "-m",
+                "pip",
+                "install",
+                "-r",
+                requirementsFile.getAbsolutePath()
+        );
         processBuilder.redirectErrorStream(true);
 
         Process process = processBuilder.start();
@@ -46,7 +51,8 @@ public class PythonDependencyInstaller implements CommandLineRunner {
         if (exitCode == 0) {
             System.out.println("Python dependencies installed successfully.");
         } else {
-            System.err.println("Failed to install python dependencies. Exit code: " + exitCode);
+            System.err.println("Failed to install Python dependencies. Exit code: " + exitCode);
+            throw new RuntimeException("Python dependency installation failed.");
         }
     }
 }

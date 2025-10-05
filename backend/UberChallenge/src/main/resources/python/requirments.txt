@@ -1,4 +1,0 @@
-catboost
-numpy
-pandas
-seaborn

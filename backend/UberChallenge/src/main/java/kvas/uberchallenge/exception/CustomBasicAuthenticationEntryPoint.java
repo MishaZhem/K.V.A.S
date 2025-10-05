@@ -15,7 +15,7 @@ public class CustomBasicAuthenticationEntryPoint implements AuthenticationEntryP
     {
         LocalDateTime currentTimeStamp = LocalDateTime.now();
         String message = (authException != null && authException.getMessage() != null) ? authException.getMessage() : "Unauthorized";
-        response.setHeader("cmast-server-error-reason", "Authentication failed");
+        response.setHeader("error-reason", "Authentication failed");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         response.setContentType("application/json;charset=UTF-8");

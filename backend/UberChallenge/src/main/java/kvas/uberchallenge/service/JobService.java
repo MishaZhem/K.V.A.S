@@ -24,7 +24,8 @@ public class JobService {
     private final OrderRepository orderRepository;
 
     private static final double MAX_RADIUS_KM = 10.0;
-    private static final String PYTHON_SCRIPT_PATH = "src/main/resources/python/kvas_evaluateorders.py";
+    private static final String PYTHON_CONTAINER_NAME = "python-service";
+    private static final String PYTHON_SCRIPT_PATH = "/scripts/kvas_evaluateorders.py";
 
     public JobListResponseDTO getJobs(String username, Double currentLat, Double currentLon) {
         Driver driver = driverRepository.getDriverByUser_Username(username)
@@ -39,13 +40,16 @@ public class JobService {
             }
 
             String inputCsv = buildInputCsv(currentLat, currentLon, driver, orders);
-            String outputCsv = executePythonScript(inputCsv);
+            String outputCsv = executePythonScriptInContainer(inputCsv);
             List<JobItemResponseDTO> jobs = parseOutputCsv(outputCsv);
 
             return new JobListResponseDTO(jobs);
 
         } catch (IOException | InterruptedException e) {
             log.error("Failed to get jobs for driver {}", username, e);
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            }
             throw new RuntimeException("Failed to process job analysis", e);
         }
     }
@@ -86,57 +90,71 @@ public class JobService {
         return csv.toString();
     }
 
-    private String executePythonScript(String inputCsv) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("python", PYTHON_SCRIPT_PATH);
-        processBuilder.redirectErrorStream(false); // Keep stderr separate
+    /**
+     * Executes Python script in the python-service Docker container
+     * Uses docker exec to run the script and pipes CSV data via stdin
+     */
+    private String executePythonScriptInContainer(String inputCsv) throws IOException, InterruptedException {
+        log.debug("Executing Python script in container: {}", PYTHON_CONTAINER_NAME);
+
+        // Build the docker exec command
+        ProcessBuilder processBuilder = new ProcessBuilder(
+                "docker", "exec", "-i", PYTHON_CONTAINER_NAME,
+                "python", PYTHON_SCRIPT_PATH
+        );
+        processBuilder.redirectErrorStream(false);
+
         Process process = processBuilder.start();
 
-        // Write CSV to stdin in a separate thread to avoid deadlock
-        Thread writerThread = new Thread(() -> {
-            try (OutputStreamWriter writer = new OutputStreamWriter(process.getOutputStream())) {
-                writer.write(inputCsv);
-                writer.flush();
-            } catch (IOException e) {
-                log.error("Error writing to Python process stdin", e);
-            }
-        });
-        writerThread.start();
+        // Write CSV input to the Python script's stdin
+        try (OutputStreamWriter writer = new OutputStreamWriter(process.getOutputStream())) {
+            writer.write(inputCsv);
+            writer.flush();
+        } catch (IOException e) {
+            log.error("Failed to write input to Python process", e);
+            process.destroyForcibly();
+            throw e;
+        }
 
-        // Read stdout (the CSV output)
-        StringBuilder output = new StringBuilder();
+        // Read the output (CSV results)
+        String output;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
+            output = reader.lines().collect(Collectors.joining("\n"));
         }
 
-        // Read stderr for errors/logging
-        StringBuilder errors = new StringBuilder();
+        // Read any errors from stderr
+        String errors;
         try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-            String line;
-            while ((line = errorReader.readLine()) != null) {
-                errors.append(line).append("\n");
-                log.warn("Python stderr: {}", line);
-            }
+            errors = errorReader.lines().collect(Collectors.joining("\n"));
         }
 
-        writerThread.join();
+        if (!errors.isEmpty()) {
+            log.warn("Python script stderr output: {}", errors);
+        }
+
+        // Wait for the process to complete
         int exitCode = process.waitFor();
 
         if (exitCode != 0) {
-            throw new RuntimeException("Python script failed with exit code " + exitCode +
-                    ". Errors: " + errors.toString());
+            log.error("Python script failed with exit code {}. Error output: {}", exitCode, errors);
+            throw new RuntimeException("Python script execution failed with exit code " + exitCode +
+                    ". Errors: " + errors);
         }
 
-        return output.toString();
+        log.debug("Python script executed successfully");
+        return output;
     }
 
     private List<JobItemResponseDTO> parseOutputCsv(String csvOutput) throws IOException {
         List<JobItemResponseDTO> jobs = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new StringReader(csvOutput))) {
-            reader.readLine(); // Skip header
+            String header = reader.readLine(); // Skip header
+            if (header == null) {
+                log.warn("Empty CSV output from Python script");
+                return jobs;
+            }
+
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
@@ -146,22 +164,28 @@ public class JobService {
 
                 String[] data = line.split(",");
                 if (data.length < 6) {
-                    log.warn("Skipping invalid output line: {}", line);
+                    log.warn("Skipping invalid output line (expected 6 columns, got {}): {}",
+                            data.length, line);
                     continue;
                 }
 
-                JobItemResponseDTO job = new JobItemResponseDTO(
-                        Double.parseDouble(data[0]), // dist_Order
-                        Double.parseDouble(data[1]), // time_Order
-                        Double.parseDouble(data[2]), // earn_Order
-                        Double.parseDouble(data[3]), // dist_Pick
-                        Double.parseDouble(data[4]), // time_Pick
-                        Double.parseDouble(data[5])  // moneyPerHour
-                );
-                jobs.add(job);
+                try {
+                    JobItemResponseDTO job = new JobItemResponseDTO(
+                            Double.parseDouble(data[0]), // dist_Order
+                            Double.parseDouble(data[1]), // time_Order
+                            Double.parseDouble(data[2]), // earn_Order
+                            Double.parseDouble(data[3]), // dist_Pick
+                            Double.parseDouble(data[4]), // time_Pick
+                            Double.parseDouble(data[5])  // moneyPerHour
+                    );
+                    jobs.add(job);
+                } catch (NumberFormatException e) {
+                    log.warn("Failed to parse numeric values in line: {}", line, e);
+                }
             }
         }
 
+        log.debug("Parsed {} jobs from Python output", jobs.size());
         return jobs;
     }
 }

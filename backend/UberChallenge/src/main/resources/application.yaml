@@ -4,7 +4,7 @@ spring:
   datasource:
     username: admin
     password: 123456
-    url: jdbc:postgresql://127.0.0.1:5430/uber_challenge?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:postgresql://127.0.0.1:5432/uber_challenge?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: RestDB-Pool
@@ -26,18 +26,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
-  flyway:
-    enabled: false
+      ddl-auto: update
+    flyway:
+      enabled: false
 
 server:
   port: 8082
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: TRACE
 
 app:
   jwt:
@@ -46,6 +40,3 @@ app:
     JWT_EXPIRATION_KEY: JWT_EXPIRATION_TIME
     JWT_EXPIRATION_TIME_HOURS: 5
     JWT_HEADER: Authorization
-  ml:
-    service:
-      url: http://localhost:5000
