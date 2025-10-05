@@ -2,10 +2,28 @@ import { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { points } from '../assets';
 import { ButtonSleep, ButtonMoney } from "../components";
+import type { HeatmapPointsResponse } from '../types/responses';
+import endpoints from '../data/endpoints';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
-const MapAnimation = () => {
+const encodeGeoJSON = (response: HeatmapPointsResponse) => {
+    return {
+        type: "FeatureCollection",
+        features: response.points.map((p) => {return {
+            type: "Feature",
+            properties: {
+                sumProfit: p.value,
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [p.y, p.x],
+            }
+        };})
+    }
+}
+
+const MapAnimation = ({username}: {username: string}) => {
     const mapContainer = useRef(null);
     const map = useRef<mapboxgl.Map | null>(null);
     const labelRef = useRef(null);
@@ -22,48 +40,47 @@ const MapAnimation = () => {
             center: [-74.0059, 40.7128],
             zoom: 12
         });
-
-        const m = map.current;
-
-        m.on('load', () => {
-            m.addLayer({
-                id: 'collisions',
-                type: 'circle',
-                source: {
+        
+            const m = map.current;
+            m.on('load', () => {
+                m.addSource('orders', {
                     type: 'geojson',
-                    data: 'https://raw.githubusercontent.com/MishaZhem/jsonTest/refs/heads/main/collisions1601.json'
-                },
-                paint: {
-                    'circle-radius': [
-                        'interpolate',
-                        ['linear'],
-                        ['number', ['get', 'Casualty']],
-                        0,
-                        4,
-                        5,
-                        24
-                    ],
-                    'circle-color': [
-                        'interpolate',
-                        ['linear'],
-                        ['number', ['get', 'Casualty']],
-                        0,
-                        '#2DC4B2',
-                        1,
-                        '#3BB3C3',
-                        2,
-                        '#669EC4',
-                        3,
-                        '#8B88B6',
-                        4,
-                        '#A2719B',
-                        5,
-                        '#AA5E79'
-                    ],
-                    'circle-opacity': 1
-                },
-                filter: ['==', ['number', ['get', 'Hour']], 12]
-            });
+                    data: `http://localhost:8082/api/driver/heatmap/url?hour=${curHour}&username=${username}`
+                })
+                m.addLayer({
+                    id: 'collisions',
+                    type: 'circle',
+                    paint: {
+                        'circle-radius': [
+                            'interpolate',
+                            ['linear'],
+                            ['number', ['get', 'Casualty']],
+                            0,
+                            4,
+                            5,
+                            24
+                        ],
+                        'circle-color': [
+                            'interpolate',
+                            ['linear'],
+                            ['number', ['get', 'Casualty']],
+                            0,
+                            '#2DC4B2',
+                            1,
+                            '#3BB3C3',
+                            2,
+                            '#669EC4',
+                            3,
+                            '#8B88B6',
+                            4,
+                            '#A2719B',
+                            5,
+                            '#AA5E79'
+                        ],
+                        'circle-opacity': 1
+                    },
+                    filter: ['==', ['number', ['get', 'Hour']], 12]
+                });
 
             const slider = document.getElementById('slider');
             if (slider) {
@@ -73,6 +90,7 @@ const MapAnimation = () => {
                     m.setFilter('collisions', ['==', ['number', ['get', 'Hour']], hour]);
                 });
             }
+        
 
             // m.addLayer({
             //         id: 'collisions-hexagons',

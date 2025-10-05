@@ -36,7 +36,7 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
     if (user) {
         return (
             <div className="relative">
-                <HeatMap />
+                <HeatMap username={user.username} />
                 <img src={uber} className="absolute left-10 top-10 w-32 opacity-30" alt="" />
                 <div className="flex flex-col">
                     <TopMenu userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown} />

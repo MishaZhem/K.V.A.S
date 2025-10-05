@@ -1,5 +1,6 @@
 package kvas.uberchallenge.controller;
 
+import kvas.uberchallenge.model.HeatmapPointMapBoxDTO;
 import kvas.uberchallenge.model.HeatmapResponseDTO;
 import kvas.uberchallenge.service.HeatmapService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,15 @@ public class HeatmapController {
         String username = authentication.getName();
         HeatmapResponseDTO response = heatmapService.getHeatmap(username, hour);
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/heatmap/url")
+    public ResponseEntity<HeatmapPointMapBoxDTO> getHeatmapAsURLToData(
+            @RequestParam Integer hour,
+            @RequestParam String username
+        ) {
+            HeatmapResponseDTO response = heatmapService.getHeatmap(username, hour);
+            HeatmapPointMapBoxDTO mapBoxDTO = new HeatmapPointMapBoxDTO(response);
+        return ResponseEntity.ok(mapBoxDTO);
     }
 }
 

@@ -8,6 +8,7 @@ const endpoints = {
         // GET the next recommended job (highest rating)
         take: "http://localhost:8082/api/jobs/take", // GET
     },
+    getHeatmap: "http://localhost:8082/api/driver/heatmap"
 };
 
 export default endpoints;
