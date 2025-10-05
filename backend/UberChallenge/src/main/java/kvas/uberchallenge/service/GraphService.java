@@ -71,13 +71,13 @@ public class GraphService {
                 String.valueOf(currentLat),
                 String.valueOf(currentLon),
                 String.valueOf(driver.getRating()),
-                String.valueOf(driver.getEarnerType().ordinal()),
+                "0",
                 String.valueOf(driver.getExperienceMonths()),
                 String.valueOf(driver.getFuelType().ordinal()),
                 String.valueOf(driver.getIsEv()),
                 String.valueOf(driver.getVehicleType().ordinal()),
-                String.valueOf(driver.getEarnerType().ordinal() == 0 ? 0 : 1),
-                "0" // Assuming default weather
+                "0",
+                "0"
         );
 
         return header + "\n" + driverData + "\n";
@@ -92,7 +92,6 @@ public class GraphService {
 
         // Build the docker exec command
         ProcessBuilder processBuilder = new ProcessBuilder(
-                "docker", "exec", "-i", PYTHON_CONTAINER_NAME,
                 "python", PYTHON_SCRIPT_PATH
         );
         processBuilder.redirectErrorStream(false);

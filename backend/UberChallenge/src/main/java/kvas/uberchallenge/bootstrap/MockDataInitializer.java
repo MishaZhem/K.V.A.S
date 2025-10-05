@@ -61,7 +61,7 @@ public class MockDataInitializer implements CommandLineRunner {
                     log.warn("Skipping file with invalid name format: {}", filename);
                     continue;
                 }
-                int productType = Integer.parseInt(parts[0]);
+                int earnerType = Integer.parseInt(parts[0]);
                 int hour;
                 try {
                     hour = Integer.parseInt(parts[1]);
@@ -81,7 +81,7 @@ public class MockDataInitializer implements CommandLineRunner {
                                         .latitude(Double.parseDouble(data[0]))
                                         .longitude(Double.parseDouble(data[1]))
                                         .moneyPerHour(Double.parseDouble(data[2]))
-                                        .productType(productType)
+                                        .earnerType(earnerType)
                                         .hour(hour)
                                         .build();
                                 heatMapPoints.add(point);
