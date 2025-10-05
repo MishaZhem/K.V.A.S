@@ -24,7 +24,7 @@ public class JobService {
     private final OrderRepository orderRepository;
 
     private static final double MAX_RADIUS_KM = 10.0;
-    private static final String PYTHON_SCRIPT_PATH = "src/main/resources/python/job_analysis/kvas_evaluateorders.py";
+    private static final String PYTHON_SCRIPT_PATH = "src/main/resources/python/kvas_evaluateorders.py";
 
     public JobListResponseDTO getJobs(String username, Double currentLat, Double currentLon) {
         Driver driver = driverRepository.getDriverByUser_Username(username)

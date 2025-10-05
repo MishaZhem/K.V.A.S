@@ -2,6 +2,7 @@ package kvas.uberchallenge.helper;
 
 import kvas.uberchallenge.entity.*;
 import kvas.uberchallenge.entity.enums.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 /**
  * Utility class for converting between enum names and their integer values
@@ -23,7 +24,7 @@ public class EnumMappingHelper {
             case "ubergreen" -> ProductType.UBER_GREEN;
             case "uberblack" -> ProductType.UBER_BLACK;
             case "uber_eats" -> ProductType.UBER_EATS;
-            default -> throw new IllegalArgumentException("Invalid product type: " + name);
+            default -> throw new HttpMessageNotReadableException("Invalid product type: " + name);
         };
     }
 
@@ -33,7 +34,7 @@ public class EnumMappingHelper {
             case "car" -> VehicleType.CAR;
             case "scooter" -> VehicleType.SCOOTER;
             case "bike" -> VehicleType.BIKE;
-            default -> throw new IllegalArgumentException("Invalid vehicle type: " + name);
+            default -> throw new HttpMessageNotReadableException("Invalid vehicle type: " + name);
         };
     }
 
@@ -43,7 +44,7 @@ public class EnumMappingHelper {
             case "cash" -> PaymentType.CASH;
             case "card" -> PaymentType.CARD;
             case "wallet" -> PaymentType.WALLET;
-            default -> throw new IllegalArgumentException("Invalid payment type: " + name);
+            default -> throw new HttpMessageNotReadableException("Invalid payment type: " + name);
         };
     }
 
@@ -52,7 +53,7 @@ public class EnumMappingHelper {
         return switch (name.toLowerCase()) {
             case "driver" -> EarnerType.DRIVER;
             case "courier" -> EarnerType.COURIER;
-            default -> throw new IllegalArgumentException("Invalid earner type: " + name);
+            default -> throw new HttpMessageNotReadableException("Invalid earner type: " + name);
         };
     }
 
@@ -62,7 +63,7 @@ public class EnumMappingHelper {
             case "hybrid" -> FuelType.HYBRID;
             case "ev" -> FuelType.EV;
             case "gas" -> FuelType.GAS;
-            default -> throw new IllegalArgumentException("Invalid fuel type: " + name);
+            default -> throw new HttpMessageNotReadableException("Invalid fuel type: " + name);
         };
     }
 
@@ -72,7 +73,7 @@ public class EnumMappingHelper {
             case "clear" -> WeatherType.CLEAR;
             case "rain" -> WeatherType.RAIN;
             case "snow" -> WeatherType.SNOW;
-            default -> throw new IllegalArgumentException("Invalid weather type: " + name);
+            default -> throw new HttpMessageNotReadableException("Invalid weather type: " + name);
         };
     }
 
