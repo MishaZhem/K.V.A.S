@@ -21,7 +21,8 @@ const ButtonMoney = (props: ButtonProps) => {
                     {/* Диагональные линии */}
                     {props.end - props.start > 3 ? (
                         <>
-                            <div className="backLinesOrange"></div>                        </>
+                            <div className="backLinesOrange"></div>
+                        </>
                     ) : ""}
 
                 </div>

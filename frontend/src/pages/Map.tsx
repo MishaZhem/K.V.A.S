@@ -18,7 +18,7 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
         //     return;
         // }
         if (user) {
-            if (user.username === "admin") {setJobs(jobs_test); return; }
+            if (user.username === "admin") { setJobs(jobs_test); return; }
             if (window.localStorage.getItem('uberapp-jwt') === null) { return; }
             const token = window.localStorage.getItem('uberapp-jwt') as string;
             fetch(endpoints.jobs.view, {
@@ -28,7 +28,7 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
                     "Authorization": token,
                 }
             }).then((v) => v.json()).then((v) => {
-                if ( v.jobs === null ) { setJobs([]); return; }
+                if (v.jobs === null) { setJobs([]); return; }
                 setJobs(v.jobs as JobItem[]);
             })
         }
@@ -36,7 +36,7 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
     if (user) {
         return (
             <div className="relative">
-                <HeatMap username={user.username} />
+                <HeatMap username={user.username} userToken={user.loginToken} />
                 <img src={uber} className="absolute left-10 top-10 w-32 opacity-30" alt="" />
                 <div className="flex flex-col">
                     <TopMenu userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown} />

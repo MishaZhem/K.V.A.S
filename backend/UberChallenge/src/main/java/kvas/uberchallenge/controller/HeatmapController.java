@@ -18,7 +18,6 @@ public class HeatmapController {
 
     @GetMapping("/heatmap")
     public ResponseEntity<HeatmapPointMapBoxDTO> getHeatmap(
-            @RequestParam Integer hour,
             Authentication authentication) {
 
         String username = authentication.getName();
@@ -26,7 +25,6 @@ public class HeatmapController {
     }
     @GetMapping("/heatmap/url")
     public ResponseEntity<HeatmapPointMapBoxDTO> getHeatmapAsURLToData(
-            @RequestParam Integer hour,
             @RequestParam String username
         ) {
             HeatmapPointMapBoxDTO mapBoxDTO = heatmapService.getHeatmap(username); 

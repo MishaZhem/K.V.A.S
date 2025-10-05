@@ -10,16 +10,18 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 const encodeGeoJSON = (response: HeatmapPointsResponse) => {
     return {
         type: "FeatureCollection",
-        features: response.points.map((p) => {return {
-            type: "Feature",
-            properties: {
-                sumProfit: p.value,
-            },
-            geometry: {
-                type: "Point",
-                coordinates: [p.y, p.x],
-            }
-        };})
+        features: response.points.map((p) => {
+            return {
+                type: "Feature",
+                properties: {
+                    sumProfit: p.value,
+                },
+                geometry: {
+                    type: "Point",
+                    coordinates: [p.y, p.x],
+                }
+            };
+        })
     }
 }
 
@@ -43,14 +45,57 @@ function getLeftMargin(start: number) {
     return offset;
 }
 
-const MapAnimation = ({username}: {username: string}) => {
+const MapAnimation = ({ username, userToken }: { username: string, userToken: string }) => {
     const mapContainer = useRef(null);
     const map = useRef<mapboxgl.Map | null>(null);
     const labelRef = useRef(null);
     const hours = ["00", "06", "12", "18", "24"];
     const [curHour, setCurHour] = useState(11);
-    const [toSleep, setToSleep] = useState<number[][]>([[0, 8], [14, 15]]);
-    const [toWork, setToWork] = useState<number[][]>([[8, 14], [15, 23]]);
+    const [toSleep, setToSleep] = useState<number[][]>([]);
+    const [toWork, setToWork] = useState<number[][]>([]);
+
+    useEffect(() => {
+        async function getGraph() {
+            const response = await fetch(`http://localhost:8082/api/driver/graph?currentLat=${40}&currentLon=${40}`, {
+                mode: "cors",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": userToken
+                },
+
+            });
+            const data = await response.json();
+            let body = data.graphData as boolean[];
+            let prev = 0;
+            let work = body[0];
+            console.log(body);
+            let workArray = []
+            let sleepArray = []
+            for (let i = 0; i < body.length; i++) {
+                if (body[i] != work) {
+                    if (work) {
+                        workArray.push([prev, i]);
+                        prev = i;
+                    } else {
+                        sleepArray.push([prev, i]);
+                        prev = i;
+                    }
+                }
+                work = body[i];
+            }
+            if (work) {
+                workArray.push([prev, 23]);
+            } else {
+                sleepArray.push([prev, 23]);
+            }
+            setToWork(workArray);
+            setToSleep(sleepArray);
+            console.log(workArray);
+            console.log(sleepArray);
+        }
+        getGraph();
+    }, []);
 
     useEffect(() => {
         console.log('Map container:', map.current);
@@ -59,10 +104,10 @@ const MapAnimation = ({username}: {username: string}) => {
         map.current = new mapboxgl.Map({
             container: mapContainer.current as unknown as HTMLElement,
             style: 'mapbox://styles/misha111/cmgcoero500fa01r02s4x2e8d',
-            center: [-74.0059, 40.7128],
+            center: [4.895168, 52.370216],
             zoom: 12
         });
-        
+
         const m = map.current;
         m.on('load', () => {
             m.addLayer({
@@ -70,7 +115,7 @@ const MapAnimation = ({username}: {username: string}) => {
                 type: 'circle',
                 source: {
                     type: 'geojson',
-                    data: `http://localhost:8082/api/driver/heatmap/url?hour=${curHour}&username=${username}`
+                    data: `http://localhost:8082/api/driver/heatmap/url?username=${username}`
                 },
                 paint: {
                     'circle-radius': 5
@@ -107,15 +152,15 @@ const MapAnimation = ({username}: {username: string}) => {
                 filter: ['==', ['number', ['get', 'hour']], 11]
             });
 
-        const slider = document.getElementById('slider');
-        if (slider) {
-            slider.addEventListener('input', (event) => {
-                const hour = parseInt((event.target as HTMLInputElement).value);
-                // update the map
-                m.setFilter('collisions', ['==', ['number', ['get', 'hour']], hour]);
-            });
-        }
-        
+            const slider = document.getElementById('slider');
+            if (slider) {
+                slider.addEventListener('input', (event) => {
+                    const hour = parseInt((event.target as HTMLInputElement).value);
+                    // update the map
+                    m.setFilter('collisions', ['==', ['number', ['get', 'hour']], hour]);
+                });
+            }
+
 
             // m.addLayer({
             //         id: 'collisions-hexagons',
