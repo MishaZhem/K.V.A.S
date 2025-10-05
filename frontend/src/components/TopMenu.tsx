@@ -17,7 +17,7 @@ export default function TopMenu({ userContext }: { userContext: UserContextType 
     <motion.div
       layout
       transition={layoutSpring}
-      className="text-[#ABABAB] bg-[#171717] absolute right-10 top-10 shadow-xl/30 overflow-hidden border-2 border-[#434343]"
+      className="text-[#ABABAB] bg-[#171717] absolute w-max centerMes top-10 shadow-xl/30 overflow-hidden border-2 border-[#434343]"
       style={{ borderRadius: 24 }}
     >
       <motion.div layout="position" className="p-3 pl-4 font-mono">
