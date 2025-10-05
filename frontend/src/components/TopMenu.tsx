@@ -1,13 +1,24 @@
 
 import { useState } from "react";
-import { motion, AnimatePresence, type Transition } from "framer-motion";
+import { motion, type Transition } from "framer-motion";
 import { user } from "../assets";
 import type { UserContextType } from "../types/userContext";
+import type { JobItem } from "../types/job";
+import JobItemDisplay from "./JobItem";
 
 // A slightly softer spring for a smoother layout animation
 const layoutSpring: Transition = { type: "spring", stiffness: 500, damping: 35 };
 
-export default function TopMenu({ userContext }: { userContext: UserContextType }) {
+const JobList = ({ jobs }: { jobs: JobItem[] }) => (
+  <div>
+    {jobs.map((job, index) => (
+      <JobItemDisplay jobs={jobs} jobi={index} />
+    ))}
+  </div>
+);
+
+
+export default function TopMenu({ userContext, jobs }: { userContext: UserContextType, jobs: JobItem[] }) {
   const [activeView, setActiveView] = useState<"jobs" | "profile" | null>(null);
 
   const toggleView = (view: "jobs" | "profile") =>
@@ -55,9 +66,15 @@ export default function TopMenu({ userContext }: { userContext: UserContextType 
           )}
 
           {activeView === "jobs" && (
-            <div className="p-2 pt-0 pl-5 pr-4 pb-4">
-              <h2 className="font-bold">Available Jobs</h2>
-              <p>No jobs available right now.</p>
+            <div className="font-sans p-2 pt-0 pl-5 pr-4 pb-4">
+              <h2 className="font-bold mb-2">Available Jobs</h2>
+              {jobs.length > 0 ? (
+                <JobList jobs={jobs} />
+              ) : (
+                <p className="text-white_secondary/80">
+                  No jobs available right now.
+                </p>
+              )}
             </div>
           )}
         </motion.div>

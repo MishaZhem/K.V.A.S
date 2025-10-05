@@ -1,5 +1,3 @@
-import type { Loc } from "./userContext"
-
 type JobItem = {
   expectedDistanceFromPickUpToDropOff: number;
   expectedDistanceFromDriverToPickUp: number;

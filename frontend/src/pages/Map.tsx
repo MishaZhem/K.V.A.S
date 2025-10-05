@@ -12,15 +12,33 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
   const [jobs, setJobs] = useState<JobItem[]>([]);
   const [jobsShown, setJobsShown] = useState(false);
   const [profileShown, setProfileShown] = useState(false);
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+
   useEffect(() => {
-    // if (user && user.username === "admin") {
-    //     setJobs(jobs_test);
-    //     return;
-    // }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        },
+        (err) => {
+          setLatitude(52.370216);
+          setLongitude(4.895168);
+        }
+      );
+    } else {
+      setLatitude(52.370216);
+      setLongitude(4.895168);
+    }
+  }, []);
+
+  useEffect(() => {
     if (user) {
       if (window.localStorage.getItem('uberapp-jwt') === null) { return; }
+      if (latitude === null || longitude === null) return;
       const token = window.localStorage.getItem('uberapp-jwt') as string;
-      fetch(`${endpoints.jobs.view}?currentLat=52&currentLon=4`, {
+      fetch(`${endpoints.jobs.view}?currentLat=${latitude}&currentLon=${longitude}`, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -32,21 +50,8 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
         setJobs(v.jobs as JobItem[]);
       })
     }
-  }, [user])
-  if (user) {
-    if (window.localStorage.getItem('uberapp-jwt') === null) { return; }
-    const token = window.localStorage.getItem('uberapp-jwt') as string;
-    fetch(endpoints.jobs.view, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Authorization": token,
-      }
-    }).then((v) => v.json()).then((v) => {
-      if (v.jobs === null) { setJobs([]); return; }
-      setJobs(v.jobs as JobItem[]);
-    })
-  }
+  }, [user, longitude, latitude])
+
   if (user) {
     return (
       <div className="relative">
@@ -55,9 +60,9 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
         <AnimatePresence mode="wait">
 
           <div className="flex flex-col">
-            <TopMenu userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown} />
-            <Jobs shown={jobsShown} jobs={jobs}></Jobs>
-            <Profile shown={profileShown} userContext={user}></Profile>
+            <TopMenu userContext={user} jobs={jobs} />
+            {/* <Jobs shown={jobsShown} jobs={jobs}></Jobs> */}
+            {/* <Profile shown={profileShown} userContext={user}></Profile> */}
           </div>
 
         </AnimatePresence>

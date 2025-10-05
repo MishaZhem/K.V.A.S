@@ -71,7 +71,7 @@ public class GraphService {
     }
 
     private String executePythonScript(String inputCsv) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder(".venv/bin/python", PYTHON_SCRIPT_PATH);
+        ProcessBuilder processBuilder = new ProcessBuilder("    python", PYTHON_SCRIPT_PATH);
         processBuilder.redirectErrorStream(false);
         Process process = processBuilder.start();
 
