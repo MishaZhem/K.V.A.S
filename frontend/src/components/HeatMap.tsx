@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import { points } from '../assets';
 import { ButtonSleep, ButtonMoney } from "../components";
 import type { HeatmapPointsResponse } from '../types/responses';
-import endpoints from '../data/endpoints';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -41,7 +41,6 @@ function getLeftMargin(start: number) {
         return 0;
     }
     let offset = element.offsetWidth / 23 * start
-    console.log(element.offsetWidth / 23, start, offset)
     return offset;
 }
 
@@ -53,6 +52,7 @@ const MapAnimation = ({ username, userToken }: { username: string, userToken: st
     const [curHour, setCurHour] = useState(11);
     const [toSleep, setToSleep] = useState<number[][]>([]);
     const [toWork, setToWork] = useState<number[][]>([]);
+    const [loadingGraph, setLoadingGraph] = useState(true);
 
     useEffect(() => {
         async function getGraph() {
@@ -91,6 +91,7 @@ const MapAnimation = ({ username, userToken }: { username: string, userToken: st
             }
             setToWork(workArray);
             setToSleep(sleepArray);
+            setLoadingGraph(false);
             console.log(workArray);
             console.log(sleepArray);
         }
@@ -229,18 +230,22 @@ const MapAnimation = ({ username, userToken }: { username: string, userToken: st
                                 <ButtonSleep start={0} end={0}></ButtonSleep>
                                 <div className='bg-white h-[25px]'></div>
                             </div>
-                            {toSleep.map((x) => (
-                                <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
-                                    <div className={`buttonAct2 ${x}`}><ButtonSleep start={x[0]} end={x[1]}></ButtonSleep></div>
-                                    <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
-                                </div>
-                            ))}
-                            {toWork.map((x) => (
-                                <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
-                                    <div className={`buttonAct2`}><ButtonMoney start={x[0]} end={x[1]}></ButtonMoney></div>
-                                    <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
-                                </div>
-                            ))}
+                            {loadingGraph ? (<Skeleton className='skeletonGraph' baseColor="#202020" highlightColor="#333" />) : (
+                                <>
+                                    {toSleep.map((x) => (
+                                        <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
+                                            <div className={`buttonAct2 ${x}`}><ButtonSleep start={x[0]} end={x[1]}></ButtonSleep></div>
+                                            <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
+                                        </div>
+                                    ))}
+                                    {toWork.map((x) => (
+                                        <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
+                                            <div className={`buttonAct2`}><ButtonMoney start={x[0]} end={x[1]}></ButtonMoney></div>
+                                            <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
+                                        </div>
+                                    ))}
+                                </>
+                            )}
 
                         </div>
                         <div className='w-full sliderTime'></div>

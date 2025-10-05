@@ -7,7 +7,7 @@ interface ButtonProps {
 
 const ButtonMoney = (props: ButtonProps) => {
     return (
-        <div className="relative w-full h-15  overflow-hidden backdrop-blur-md">
+        <div className="relative w-full h-15 overflow-hidden backdrop-blur-md">
             <div className="absolute inset-0 flex items-center justify-center">
                 <div className="absolute inset-0">
                     {/* Внешняя рамка с неравномерной толщиной */}
