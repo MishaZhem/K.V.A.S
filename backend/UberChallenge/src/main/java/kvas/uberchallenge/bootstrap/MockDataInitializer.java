@@ -121,10 +121,10 @@ public class MockDataInitializer implements CommandLineRunner {
 
         for (int i = 0; i < 100; i++) {
             Order order = Order.builder()
-                    .startLat(random.nextDouble(50.00000, 53.00000))
-                    .startLon(random.nextDouble(4.00000, 7.00000))
-                    .endLat(random.nextDouble(50.00000, 53.00000))
-                    .endLon(random.nextDouble(4.00000, 7.00000))
+                    .startLat(random.nextDouble(51.0, 53.0))
+                    .startLon(random.nextDouble(4.0, 5.5))
+                    .endLat(random.nextDouble(51.0, 53.0))
+                    .endLon(random.nextDouble(4.0, 5.5))
                     .startingTime(random.nextInt(0, 5))
                     .productType(productTypes[random.nextInt(productTypes.length)])
                     .paymentType(paymentTypes[random.nextInt(paymentTypes.length)])

@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class GraphService {
     private final DriverRepository driverRepository;
 
-    private static final String PYTHON_SCRIPT_PATH = "src/main/resources/python/graph_prediction/kvas_graphmaker.py";
+    private static final String PYTHON_SCRIPT_PATH = "src/main/resources/python/kvas_graphmaker.py";
 
     public GraphResponseDTO getGraphData(String username, Double currentLat, Double currentLon) {
         Driver driver = driverRepository.getDriverByUser_Username(username)
@@ -46,7 +46,7 @@ public class GraphService {
         // Header
         String[] header = {
                 "driverLat", "driverLon", "rating", "earnerType", "experienceMonths",
-                "fuelType", "isEv", "vehicleType", "weatherType"
+                "fuelType", "isEv", "vehicleType", "productType", "weatherType"
         };
         csv.append(String.join(",", header)).append("\n");
 
@@ -60,6 +60,7 @@ public class GraphService {
                 String.valueOf(driver.getFuelType().ordinal()),
                 String.valueOf(driver.getIsEv()),
                 String.valueOf(driver.getVehicleType().ordinal()),
+                String.valueOf(driver.getEarnerType().ordinal() == 0 ? 0 : 1),
                 "0"
         };
 
