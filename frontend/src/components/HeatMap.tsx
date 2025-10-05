@@ -104,38 +104,40 @@ const MapAnimation = () => {
         <div className="map-container">
             <div ref={mapContainer} className="map" />
             <div className="absolute right-0 left-0 bottom-0 h-[300px] w-full z-10 md:w-full overflow-x-auto overflow-y-hidden">
-                <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4 w-[1500px] pr-10 md:w-auto md:pr-0'>
-                    <div className='graph z-10 mb-[20px]'>
-                        <div className='flex justify-between w-full mb-[-25px]'>
-                            <div className='flex flex-col gap-2 w-[500px]'>
-                                <ButtonSleep></ButtonSleep>
-                                <div className='bg-white h-[25px]'></div>
-                            </div>
-                            <div className='flex flex-col gap-2 w-[250px]'>
-                                <ButtonMoney></ButtonMoney>
-                                <div className='bg-white h-[25px]'></div>
-                            </div>
+                <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4 w-[1500px] md:w-auto'>
+                    <div className='pr-10'>
+                        <div className='graph z-10 mb-[20px]'>
+                            <div className='flex justify-between w-full mb-[-25px]'>
+                                <div className='flex flex-col gap-2 w-[500px]'>
+                                    <ButtonSleep></ButtonSleep>
+                                    <div className='bg-white h-[25px]'></div>
+                                </div>
+                                <div className='flex flex-col gap-2 w-[250px]'>
+                                    <ButtonMoney></ButtonMoney>
+                                    <div className='bg-white h-[25px]'></div>
+                                </div>
 
-                        </div>
-                        <div className='w-full sliderTime'></div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <input
-                            id="slider"
-                            className="slider absolute w-full h-[300px] z-[100]"
-                            type="range"
-                            min="0"
-                            max="23"
-                            step="1"
-                            value={curHour}
-                            onChange={(e) => setCurHour(Number(e?.target?.value))}
-                        />
-                        {Array(24).fill(1).map((_, index) => (
-                            <div className={`flex flex-col items-center w-[18px] ${index % 6 != 0 ? 'mt-[4px] mb-auto' : ''}`}>
-                                <div key={index} className={`column bg-[#D9D9D9] w-[6px] ${index % 6 == 0 ? "h-[20px]" : "h-[12px]"} ${curHour == index ? 'opacity-100 bg-[#FFFFFF]' : "opacity-20"}`}></div>
-                                {index % 6 == 0 && (<h1 className={`w-[18px] flex items-center justify-center Jet ${curHour == index ? '' : "opacity-50"}`}>{index}</h1>)}
                             </div>
-                        ))}
+                            <div className='w-full sliderTime'></div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <input
+                                id="slider"
+                                className="slider absolute w-full h-[300px] z-[100]"
+                                type="range"
+                                min="0"
+                                max="23"
+                                step="1"
+                                value={curHour}
+                                onChange={(e) => setCurHour(Number(e?.target?.value))}
+                            />
+                            {Array(24).fill(1).map((_, index) => (
+                                <div className={`flex flex-col items-center w-[18px] ${index % 6 != 0 ? 'mt-[4px] mb-auto' : ''}`}>
+                                    <div key={index} className={`column bg-[#D9D9D9] w-[6px] ${index % 6 == 0 ? "h-[20px]" : "h-[12px]"} ${curHour == index ? 'opacity-100 bg-[#FFFFFF]' : "opacity-20"}`}></div>
+                                    {index % 6 == 0 && (<h1 className={`w-[18px] flex items-center justify-center Jet ${curHour == index ? '' : "opacity-50"}`}>{index}</h1>)}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

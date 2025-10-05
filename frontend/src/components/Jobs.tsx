@@ -30,9 +30,9 @@ const Jobs = ({jobs, shown}: {jobs: JobItem[], shown: boolean}) => {
     border-[#434343] 
     right-10 
     top-30 
-    p-2 
-    pl-3 
-    shadow-xl/30">{contents}</div>
+    shadow-xl/30">
+        <div className="p-2 pl-3">{contents}</div>
+    </div>
     )
 }
 export default Jobs;

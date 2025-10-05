@@ -27,10 +27,12 @@ const Home = ({user}: {user: UserContextType | undefined}) => {
     return (
         
         <div className="bg-black h-screen">
-            <div className="fixed right-0 w-1/4 bg-black shadow-lg z-50 flex flex-col gap-4 p-4 overflow-y-auto h-1/2">
-                <Navbar userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown}></Navbar>
-                <Jobs shown={jobsShown} jobs={jobs}></Jobs>
-                <Profile shown={profileShown} userContext={user}></Profile>
+            <div className="fixed right-0 w-1/4 bg-black shadow-lg z-50 flex flex-col gap-4 overflow-y-auto h-1/2">
+                <div className="p-4">
+                    <Navbar userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown}></Navbar>
+                    <Jobs shown={jobsShown} jobs={jobs}></Jobs>
+                    <Profile shown={profileShown} userContext={user}></Profile>
+                </div>
             </div>
         </div>
     );
