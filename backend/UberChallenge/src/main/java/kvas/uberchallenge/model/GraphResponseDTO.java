@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HeatmapResponseDTO {
-    private List<HeatmapPointDTO> points;
+public class GraphResponseDTO {
+    private List<Boolean> graphData;
 }
-

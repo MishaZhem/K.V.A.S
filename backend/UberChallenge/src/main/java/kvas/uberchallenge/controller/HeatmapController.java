@@ -17,18 +17,12 @@ public class HeatmapController {
 
     @GetMapping("/heatmap")
     public ResponseEntity<HeatmapResponseDTO> getHeatmap(
-            @RequestParam String time,
+            @RequestParam Integer hour,
             Authentication authentication) {
-        String username = authentication.getName();
-        HeatmapResponseDTO response = heatmapService.getHeatmap(username, time);
-        return ResponseEntity.ok(response);
-    }
 
-    private UUID extractDriverId(Authentication authentication) {
-        if (authentication != null && authentication.getDetails() instanceof UUID) {
-            return (UUID) authentication.getDetails();
-        }
-        throw new RuntimeException("Driver ID not found in authentication");
+        String username = authentication.getName();
+        HeatmapResponseDTO response = heatmapService.getHeatmap(username, hour);
+        return ResponseEntity.ok(response);
     }
 }
 
