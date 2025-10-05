@@ -56,12 +56,11 @@ export default function TopMenu({ userContext, jobs }: { userContext: UserContex
             <div className="p-2 pt-0 pl-5 pr-4 pb-4">
               <h2 className="font-bold">Profile and settings</h2>
               <p className="mt-2">Name: {userContext.username}</p>
-              <button className="opacity-70">Change name</button>
+              <p className="mt-2">Type: {userContext.isCourier ? "Courier" : "Driver"}</p>
               <hr className="border-[#434343] my-2" />
               <p>
                 You are registered as a {userContext.isCourier ? "courier" : "driver"} <br /> at Uber.
               </p>
-              <button className="opacity-70">Change registration</button>
             </div>
           )}
 
