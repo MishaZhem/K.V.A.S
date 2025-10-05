@@ -113,3 +113,7 @@ body {
   margin-top: auto;
 }
 
+.skeletonGraph {
+  width: calc(100vw - 80px) !important;
+  height: 3.75rem;
+}
