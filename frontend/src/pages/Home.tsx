@@ -6,11 +6,12 @@ import type { JobItem } from "../types/job";
 import endpoints from "../data/endpoints";
 import Navbar from "../components/Navbar";
 import Profile from "../components/Profile";
-const Home = ({user}: {user: UserContextType | undefined}) => {
+const Home = ({ user }: { user: UserContextType | undefined }) => {
 
-    const [jobs, setJobs] =  useState<JobItem[]>([]);
-    const [jobsShown, setJobsShown] =  useState(false);
-    const [profileShown, setProfileShown] =  useState(false);    
+    const [jobs, setJobs] = useState<JobItem[]>([]);
+    const [jobsShown, setJobsShown] = useState(false);
+    const [profileShown, setProfileShown] = useState(false);
+
     useEffect(() => {
         if (user && user.username === "admin") {
             setJobs(jobs_test);
@@ -24,19 +25,19 @@ const Home = ({user}: {user: UserContextType | undefined}) => {
         }
     }, [user])
     if (user) {
-    return (
-        
-        <div className="bg-black h-screen">
-            <div className="fixed right-0 w-1/4 bg-black shadow-lg z-50 flex flex-col gap-4 overflow-y-auto h-1/2">
-                <div className="p-4">
-                    <Navbar userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown}></Navbar>
-                    <Jobs shown={jobsShown} jobs={jobs}></Jobs>
-                    <Profile shown={profileShown} userContext={user}></Profile>
+        return (
+
+            <div className="bg-black h-screen">
+                <div className="fixed right-0 w-1/4 bg-black shadow-lg z-50 flex flex-col gap-4 overflow-y-auto h-1/2">
+                    <div className="p-4">
+                        <Navbar userContext={user} jobsRendered={jobsShown} profileRendered={profileShown} shouldRenderJobs={setJobsShown} shouldRenderProfile={setProfileShown}></Navbar>
+                        <Jobs shown={jobsShown} jobs={jobs}></Jobs>
+                        <Profile shown={profileShown} userContext={user}></Profile>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-} else {
+        );
+    } else {
         <div>ERROR Not logged in!!</div>
     }
 }

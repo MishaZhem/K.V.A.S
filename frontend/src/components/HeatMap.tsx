@@ -47,16 +47,36 @@ function getLeftMargin(start: number) {
 const MapAnimation = ({ username, userToken }: { username: string, userToken: string }) => {
     const mapContainer = useRef(null);
     const map = useRef<mapboxgl.Map | null>(null);
-    const labelRef = useRef(null);
-    const hours = ["00", "06", "12", "18", "24"];
     const [curHour, setCurHour] = useState(11);
     const [toSleep, setToSleep] = useState<number[][]>([]);
     const [toWork, setToWork] = useState<number[][]>([]);
     const [loadingGraph, setLoadingGraph] = useState(true);
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setLatitude(position.coords.latitude);
+                    setLongitude(position.coords.longitude);
+                },
+                (err) => {
+                    setLatitude(52.370216);
+                    setLongitude(4.895168);
+                }
+            );
+        } else {
+            setLatitude(52.370216);
+            setLongitude(4.895168);
+        }
+    }, []);
 
     useEffect(() => {
         async function getGraph() {
-            const response = await fetch(`http://localhost:8082/api/driver/graph?currentLat=${40}&currentLon=${40}`, {
+            if (latitude === null || longitude === null) return;
+
+            const response = await fetch(`http://localhost:8082/api/driver/graph?currentLat=${latitude}&currentLon=${longitude}`, {
                 mode: "cors",
                 method: "GET",
                 headers: {
@@ -96,7 +116,7 @@ const MapAnimation = ({ username, userToken }: { username: string, userToken: st
             console.log(sleepArray);
         }
         getGraph();
-    }, []);
+    }, [userToken, latitude, longitude]);
 
     useEffect(() => {
         console.log('Map container:', map.current);
