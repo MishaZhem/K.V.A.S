@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import { points } from '../assets';
 import { ButtonSleep, ButtonMoney } from "../components";
 import type { HeatmapPointsResponse } from '../types/responses';
-import endpoints from '../data/endpoints';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -41,22 +41,42 @@ function getLeftMargin(start: number) {
         return 0;
     }
     let offset = element.offsetWidth / 23 * start
-    console.log(element.offsetWidth / 23, start, offset)
     return offset;
 }
 
 const MapAnimation = ({ username, userToken }: { username: string, userToken: string }) => {
     const mapContainer = useRef(null);
     const map = useRef<mapboxgl.Map | null>(null);
-    const labelRef = useRef(null);
-    const hours = ["00", "06", "12", "18", "24"];
     const [curHour, setCurHour] = useState(11);
     const [toSleep, setToSleep] = useState<number[][]>([]);
     const [toWork, setToWork] = useState<number[][]>([]);
+    const [loadingGraph, setLoadingGraph] = useState(true);
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setLatitude(position.coords.latitude);
+                    setLongitude(position.coords.longitude);
+                },
+                (err) => {
+                    setLatitude(52.370216);
+                    setLongitude(4.895168);
+                }
+            );
+        } else {
+            setLatitude(52.370216);
+            setLongitude(4.895168);
+        }
+    }, []);
 
     useEffect(() => {
         async function getGraph() {
-            const response = await fetch(`http://localhost:8082/api/driver/graph?currentLat=${40}&currentLon=${40}`, {
+            if (latitude === null || longitude === null) return;
+
+            const response = await fetch(`http://localhost:8082/api/driver/graph?currentLat=${latitude}&currentLon=${longitude}`, {
                 mode: "cors",
                 method: "GET",
                 headers: {
@@ -91,11 +111,12 @@ const MapAnimation = ({ username, userToken }: { username: string, userToken: st
             }
             setToWork(workArray);
             setToSleep(sleepArray);
+            setLoadingGraph(false);
             console.log(workArray);
             console.log(sleepArray);
         }
         getGraph();
-    }, []);
+    }, [userToken, latitude, longitude]);
 
     useEffect(() => {
         console.log('Map container:', map.current);
@@ -229,18 +250,22 @@ const MapAnimation = ({ username, userToken }: { username: string, userToken: st
                                 <ButtonSleep start={0} end={0}></ButtonSleep>
                                 <div className='bg-white h-[25px]'></div>
                             </div>
-                            {toSleep.map((x) => (
-                                <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
-                                    <div className={`buttonAct2 ${x}`}><ButtonSleep start={x[0]} end={x[1]}></ButtonSleep></div>
-                                    <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
-                                </div>
-                            ))}
-                            {toWork.map((x) => (
-                                <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
-                                    <div className={`buttonAct2`}><ButtonMoney start={x[0]} end={x[1]}></ButtonMoney></div>
-                                    <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
-                                </div>
-                            ))}
+                            {loadingGraph ? (<Skeleton className='skeletonGraph' baseColor="#202020" highlightColor="#333" />) : (
+                                <>
+                                    {toSleep.map((x) => (
+                                        <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
+                                            <div className={`buttonAct2 ${x}`}><ButtonSleep start={x[0]} end={x[1]}></ButtonSleep></div>
+                                            <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
+                                        </div>
+                                    ))}
+                                    {toWork.map((x) => (
+                                        <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
+                                            <div className={`buttonAct2`}><ButtonMoney start={x[0]} end={x[1]}></ButtonMoney></div>
+                                            <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
+                                        </div>
+                                    ))}
+                                </>
+                            )}
 
                         </div>
                         <div className='w-full sliderTime'></div>
