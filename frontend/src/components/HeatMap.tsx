@@ -23,12 +23,34 @@ const encodeGeoJSON = (response: HeatmapPointsResponse) => {
     }
 }
 
+function getWidth(start: number, end: number) {
+    var element = document.getElementById("elementsSlider") as HTMLElement;
+    if (!element) {
+        console.warn("Element with ID 'elementsSlider' not found");
+        return 0;
+    }
+    return element.offsetWidth / 23 * (end - start);
+}
+
+function getLeftMargin(start: number) {
+    var element = document.getElementById("elementsSlider") as HTMLElement;
+    if (!element) {
+        console.warn("Element with ID 'elementsSlider' not found");
+        return 0;
+    }
+    let offset = element.offsetWidth / 23 * start
+    console.log(element.offsetWidth / 23, start, offset)
+    return offset;
+}
+
 const MapAnimation = ({username}: {username: string}) => {
     const mapContainer = useRef(null);
     const map = useRef<mapboxgl.Map | null>(null);
     const labelRef = useRef(null);
     const hours = ["00", "06", "12", "18", "24"];
     const [curHour, setCurHour] = useState(11);
+    const [toSleep, setToSleep] = useState<number[][]>([[0, 8], [14, 15]]);
+    const [toWork, setToWork] = useState<number[][]>([[8, 14], [15, 23]]);
 
     useEffect(() => {
         console.log('Map container:', map.current);
@@ -118,21 +140,59 @@ const MapAnimation = ({username}: {username: string}) => {
 
     }, []);
 
+    useEffect(() => {
+        function resizeElements() {
+            console.log(111);
+            let elems = document.getElementsByClassName("buttonAct");
+            for (let i = 0; i < elems.length; i++) {
+                let tempElem = elems[i] as HTMLElement;
+                for (const className of tempElem.classList) {
+                    if (className.includes(",")) {
+                        let s = className.split(",")
+                        tempElem.style.width = Math.ceil(getWidth(parseInt(s[0]), parseInt(s[1]))).toString() + "px";
+                        tempElem.style.left = Math.ceil(getLeftMargin((parseInt(s[0])))).toString() + "px";
+                    }
+                }
+            }
+            elems = document.getElementsByClassName("buttonAct2");
+            for (let i = 0; i < elems.length; i++) {
+                let tempElem = elems[i] as HTMLElement;
+                for (const className of tempElem.classList) {
+                    if (className.includes(",")) {
+                        let s = className.split(",")
+                        tempElem.style.width = Math.ceil(getWidth(parseInt(s[0]), parseInt(s[1]))).toString() + "px";
+                    }
+                }
+            }
+        }
+
+        window.addEventListener("resize", resizeElements);
+        resizeElements();
+    }, [toSleep, toWork]);
+
     return (
         <div className="map-container">
             <div ref={mapContainer} className="map" />
             <div className="absolute right-0 left-0 bottom-0 h-[300px] w-full z-10 md:w-full overflow-x-auto overflow-y-hidden">
-                <div className='flex flex-col gap-1 absolute left-10 right-10 bottom-4 w-[1500px] pr-10 md:w-auto md:pr-0'>
+                <div id="elementsSlider" className='flex flex-col gap-1 absolute left-10 right-10 bottom-4 w-[1500px] pr-10 md:w-auto md:pr-0'>
                     <div className='graph z-10 mb-[20px]'>
-                        <div className='flex justify-between w-full mb-[-25px]'>
-                            <div className='flex flex-col gap-2 w-[500px]'>
-                                <ButtonSleep></ButtonSleep>
+                        <div className='relative flex justify-between w-full mb-[-25px]'>
+                            <div className={`opacity-0 top-0 buttonAct flex flex-col gap-2`}>
+                                <ButtonSleep start={0} end={0}></ButtonSleep>
                                 <div className='bg-white h-[25px]'></div>
                             </div>
-                            <div className='flex flex-col gap-2 w-[250px]'>
-                                <ButtonMoney></ButtonMoney>
-                                <div className='bg-white h-[25px]'></div>
-                            </div>
+                            {toSleep.map((x) => (
+                                <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
+                                    <div className={`buttonAct2 ${x}`}><ButtonSleep start={x[0]} end={x[1]}></ButtonSleep></div>
+                                    <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
+                                </div>
+                            ))}
+                            {toWork.map((x) => (
+                                <div className={`absolute top-0 buttonAct ${x} flex flex-col gap-2`}>
+                                    <div className={`buttonAct2`}><ButtonMoney start={x[0]} end={x[1]}></ButtonMoney></div>
+                                    <div className={`${curHour >= x[0] && curHour < x[1] ? 'bg-white' : 'bg-transparent'} h-[25px]`}></div>
+                                </div>
+                            ))}
 
                         </div>
                         <div className='w-full sliderTime'></div>
