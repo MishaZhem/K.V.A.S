@@ -106,20 +106,31 @@ const DriverRegisterWidget = ({ updateUserContext }: { updateUserContext: (newUs
 
               <div>
                 <label htmlFor="driverEarnerType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">What type of earner are you?</label>
-                <input id="driverEarnerType" name="driverEarnerType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
+                <select name="driverEarnerType" id="driverEarnerType">
+                  <option value="courier">Courier (Uber Eats)</option>
+                  <option value="driver">Driver (Passengers)</option>
+                </select>
               </div>
 
               <div>
                 <label htmlFor="driverVehicleType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Your vehicle type</label>
-                <input id="driverVehicleType" name="driverVehicleType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
+                <select name="driverVehicleType" id="driverVehicleType">
+                  <option value="car">Car</option>
+                  <option value="scooter">Scooter</option>
+                  <option value="bike">Bike</option>
+                </select>
               </div>
               <div>
                 <label htmlFor="driverFuelType" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Your fuel type</label>
-                <input id="driverFuelType" name="driverFuelType" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
+                <select name="driverFuelType" id="driverFuelType">
+                  <option value="gas">Gas</option>
+                  <option value="EV">EV</option>
+                  <option value="hybrid">Hybrid</option>
+                </select>
               </div>
               <div>
                 <label htmlFor="driverExperienceMonths" className="block mb-2 text-sm font-medium text-white/50 uppercase tracking-wider">Your experience in months</label>
-                <input id="driverExperienceMonths" name="driverExperienceMonths" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
+                <input type="number" id="driverExperienceMonths" name="driverExperienceMonths" className="bg-black/30 border border-white/20 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder-white/30" />
               </div>
               <button type="submit" className="w-full text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-white/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase tracking-widest border border-white/20 transition-colors duration-100">
                 Sign up

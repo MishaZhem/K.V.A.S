@@ -47,7 +47,6 @@ const Map = ({ user }: { user: UserContextType | undefined }) => {
         setJobs(v.jobs as JobItem[]);
       })
     }
-  }, [user])
   if (user) {
     return (
       <div className="relative">
