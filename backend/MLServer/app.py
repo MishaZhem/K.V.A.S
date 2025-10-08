@@ -1,9 +1,6 @@
 from flask import Flask, request, jsonify
 import kvas_evaluateorders as ml_job
 import kvas_graphmaker as ml_graph
-import csv
-import io
-import json
 
 app = Flask(__name__)
 

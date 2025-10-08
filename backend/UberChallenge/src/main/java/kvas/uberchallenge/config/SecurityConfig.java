@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @RequiredArgsConstructor
-public class DevSecurityConfig {
+public class SecurityConfig {
 
     private final JWTTokenValidatorFilter jwtTokenValidatorFilter;
 

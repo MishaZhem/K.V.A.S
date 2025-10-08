@@ -13,7 +13,7 @@ import java.util.List;
 
 @FeignClient(
         name = "ml-service",
-        url = "${ml.service.url:http://127.0.0.1:5000}",
+        url = "${ML_SERVICE_URL:http://python-server:5000}",
         configuration = MLServiceClientConfig.class
 )
 public interface MLServiceClient {

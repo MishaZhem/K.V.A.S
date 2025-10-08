@@ -120,7 +120,7 @@ public class MockDataInitializer implements CommandLineRunner {
         PaymentType[] paymentTypes = PaymentType.values();
         WeatherType[] weatherTypes = WeatherType.values();
         // Read from classpath instead of filesystem
-        Resource dataGraphResource = resourceResolver.getResource("classpath:python/models/data_graph.csv");
+        Resource dataGraphResource = resourceResolver.getResource("classpath:data_graph.csv");
         List<String> lines;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(dataGraphResource.getInputStream()))) {
             lines = reader.lines().toList();

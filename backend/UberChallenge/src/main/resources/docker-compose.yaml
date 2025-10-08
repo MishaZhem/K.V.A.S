@@ -1,0 +1,49 @@
+x-base-config: &base-config
+  networks:
+    - uber_network
+  deploy:
+    resources:
+      limits:
+        memory: 500m
+
+services:
+  postgres:
+    <<: *base-config
+    image: postgres:16
+    container_name: uber-postgres
+    environment:
+      POSTGRES_DB: "uber_challenge"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "123456"
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d uber_challenge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  uber-insight-server:
+    <<: *base-config
+    image: michealkrestin/uber_insights:v9
+    container_name: uber-insight-server
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/uber_challenge?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 123456
+      APP_JWT_JWT_HEADER: Authorization
+      ML_SERVICE_URL: http://python-server:5000
+    ports:
+      - "8082:8082"
+
+  python-server:
+    <<: *base-config
+    image: michealkrestin/ml-server
+    container_name: uber-ml-server
+
+networks:
+  uber_network:
+    driver: "bridge"
