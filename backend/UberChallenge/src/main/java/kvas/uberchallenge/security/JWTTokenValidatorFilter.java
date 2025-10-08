@@ -7,8 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kvas.uberchallenge.constant.ApplicationConstants;
-import org.springframework.beans.factory.annotation.Value;
+import kvas.uberchallenge.constant.JWTConstants;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,21 +23,20 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Component
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
-        String jwt = request.getHeader(ApplicationConstants.JWT_HEADER);
+        String jwt = request.getHeader(JWTConstants.JWT_HEADER);
         if(jwt != null) {
             try {
                 Environment env = getEnvironment();
 
                 if (env != null) {
-                    String secret = env.getProperty(ApplicationConstants.JWT_SECRET_KEY,
-                            ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
+                    String secret = env.getProperty(JWTConstants.JWT_SECRET_KEY,
+                            JWTConstants.JWT_SECRET_DEFAULT_VALUE);
 
                     SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 

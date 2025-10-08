@@ -1,7 +1,7 @@
 package kvas.uberchallenge.controller;
 
 import jakarta.validation.Valid;
-import kvas.uberchallenge.constant.ApplicationConstants;
+import kvas.uberchallenge.constant.JWTConstants;
 import kvas.uberchallenge.model.authentification.LogInRequestDTO;
 import kvas.uberchallenge.model.authentification.LogInResponseDTO;
 import kvas.uberchallenge.model.authentification.RegisterRequestDTO;
@@ -24,7 +24,7 @@ public class AuthController {
         Pair<String, LogInResponseDTO> loginResult = authService.login(request);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header(ApplicationConstants.JWT_HEADER, loginResult.getFirst())
+                .header(JWTConstants.JWT_HEADER, loginResult.getFirst())
                 .body(loginResult.getSecond());
     }
 

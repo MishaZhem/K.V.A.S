@@ -1,6 +1,7 @@
 package kvas.uberchallenge.controller.common;
 
 import jakarta.persistence.EntityNotFoundException;
+import kvas.uberchallenge.exception.MLModelException;
 import kvas.uberchallenge.exception.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,15 @@ public class ErrorController {
         Map<String, String> error = Map.of("message", "Invalid request");
 
         return ResponseEntity.badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(error);
+    }
+
+    @ExceptionHandler(MLModelException.class)
+    public ResponseEntity<Map<String, String>> handleMLModelException(MLModelException exception) {
+        Map<String, String> error = Map.of("message", exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(error);
     }

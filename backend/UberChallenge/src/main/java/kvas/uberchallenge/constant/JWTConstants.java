@@ -1,15 +1,11 @@
 package kvas.uberchallenge.constant;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "app.jwt")
 @Component
-@Getter
-@Setter
-public final class ApplicationConstants {
+public final class JWTConstants {
     public static final String JWT_SECRET_KEY = "JWT_SECRET";
     public static final String JWT_SECRET_DEFAULT_VALUE = "jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4";
     public static final String JWT_HEADER = "Authorization";

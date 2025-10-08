@@ -2,13 +2,10 @@ package kvas.uberchallenge.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import kvas.uberchallenge.constant.ApplicationConstants;
-import kvas.uberchallenge.entity.enums.EarnerType;
-import kvas.uberchallenge.entity.enums.FuelType;
+import kvas.uberchallenge.constant.JWTConstants;
 import kvas.uberchallenge.entity.enums.Role;
 import kvas.uberchallenge.entity.Driver;
 import kvas.uberchallenge.entity.User;
-import kvas.uberchallenge.entity.enums.VehicleType;
 import kvas.uberchallenge.exception.UserAlreadyExistsException;
 import kvas.uberchallenge.helper.EnumMappingHelper;
 import kvas.uberchallenge.helper.TimeTranslator;
@@ -48,7 +45,7 @@ public class AuthService {
             User user = User.builder()
                     .username(request.getUsername())
                     .passwordHash(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.DRIVER) //TODO: different for driver and customer
+                    .role(Role.EARNER) //TODO: different for driver and customer
                     .build();
             user = userRepository.save(user);
 
@@ -103,9 +100,9 @@ public class AuthService {
 
     public String generateJWTToken(Authentication authentication)
     {
-        String secret = env.getProperty(ApplicationConstants.JWT_SECRET_KEY, ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
+        String secret = env.getProperty(JWTConstants.JWT_SECRET_KEY, JWTConstants.JWT_SECRET_DEFAULT_VALUE);
         SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        int expirationTimeHours = Integer.parseInt(env.getProperty(ApplicationConstants.JWT_EXPIRATION_KEY, String.valueOf(ApplicationConstants.JWT_EXPIRATION_TIME_HOURS)));
+        int expirationTimeHours = Integer.parseInt(env.getProperty(JWTConstants.JWT_EXPIRATION_KEY, String.valueOf(JWTConstants.JWT_EXPIRATION_TIME_HOURS)));
 
         return Jwts.builder().issuer("Uber Challenge").subject("JWT Token")
                 .claim("username", authentication.getName())

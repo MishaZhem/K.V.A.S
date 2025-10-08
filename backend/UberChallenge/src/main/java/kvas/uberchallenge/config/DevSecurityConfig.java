@@ -48,9 +48,8 @@ public class DevSecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
-                        .requestMatchers("/api/api/driver/**").permitAll()
-                        .requestMatchers("/api/driver/heatmap").hasRole(Role.DRIVER.name())
-                        .requestMatchers("/api/driver/heatmap/url").permitAll()
+                        .requestMatchers("/api/api/earner/**").hasRole(Role.EARNER.name())
+                        .requestMatchers("/api/driver/heatmap").hasRole(Role.EARNER.name())
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable);
 

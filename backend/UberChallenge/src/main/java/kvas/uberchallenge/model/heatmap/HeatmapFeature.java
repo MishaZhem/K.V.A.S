@@ -1,4 +1,4 @@
-package kvas.uberchallenge.model;
+package kvas.uberchallenge.model.heatmap;
 
 import kvas.uberchallenge.entity.HeatMapPoint;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ public class HeatmapFeature {
     private final String type = "Feature";
     private HeatmapFeatureProperties properties;
     private HeatmapFeatureGeometry geometry;
+
     public HeatmapFeature(HeatMapPoint point, Integer i) {
         HeatmapFeatureProperties prop = new HeatmapFeatureProperties(point.getMoneyPerHour(), i);
         Double[] coords = {point.getLongitude(), point.getLatitude()};
